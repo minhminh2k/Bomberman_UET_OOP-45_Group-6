@@ -71,5 +71,6 @@ public abstract class Entity {
         x = a;
         y = b;
     }
+// xin loi nay de ten nham nen phai up lai
 
 }

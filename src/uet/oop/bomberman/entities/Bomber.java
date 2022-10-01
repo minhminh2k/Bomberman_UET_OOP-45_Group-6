@@ -202,5 +202,6 @@ public class Bomber extends Entity {
             }
         }
     }
+// xin loi nay de ten nham nen phai up lai
 
 }

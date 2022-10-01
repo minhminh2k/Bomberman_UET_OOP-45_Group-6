@@ -12,4 +12,6 @@ public class Ballon extends Entity {
     public void update() {
 
     }
+    // xin loi nay de ten nham nen phai up lai
+
 }

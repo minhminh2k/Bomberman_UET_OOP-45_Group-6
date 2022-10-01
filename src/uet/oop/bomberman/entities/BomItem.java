@@ -422,4 +422,6 @@ public class BomItem extends Entity{
     public int getOne_frame_bom() {
         return one_frame_bom;
     }
+    // xin loi nay de ten nham nen phai up lai
+
 }

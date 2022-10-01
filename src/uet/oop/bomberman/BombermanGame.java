@@ -288,6 +288,6 @@ public class BombermanGame extends Application {
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
     }
-
+// xin loi nay de ten nham nen phai up lai
 
 }

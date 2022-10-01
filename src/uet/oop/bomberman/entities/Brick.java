@@ -48,5 +48,6 @@ public class Brick extends Entity{
     public void setFrameBrick(int x){
         frame_brick = x;
     }
+// xin loi nay de ten nham nen phai up lai
 
 }
