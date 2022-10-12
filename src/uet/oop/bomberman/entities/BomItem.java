@@ -6,7 +6,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BomItem extends Entity{
+public class BomItem extends Entity {
     public boolean status = false;
     public static int HEIGHT = 13;
     public static int WIDTH = 31;

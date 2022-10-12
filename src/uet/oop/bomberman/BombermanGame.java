@@ -9,6 +9,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.BomItem;
+import uet.oop.bomberman.entities.Enemies.Ballon;
+import uet.oop.bomberman.entities.Enemies.Oneal;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.*;
@@ -25,6 +28,7 @@ public class BombermanGame extends Application {
     public int SizeBom = 1;
 
     public char[][] mapMatrix;
+
     public int Row;
     public int Col;
 
@@ -32,8 +36,10 @@ public class BombermanGame extends Application {
     private Canvas canvas;
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
-    BomItem []Bom = new BomItem[numberBom];
+    BomItem[]Bom = new BomItem[numberBom];
     Brick [][]bricks = new Brick[HEIGHT][WIDTH];
+
+    //private Bomber bomberman;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -69,6 +75,7 @@ public class BombermanGame extends Application {
                 };
             }
         }
+
 
         // Tao scene
         Scene scene = new Scene(root);
@@ -156,6 +163,7 @@ public class BombermanGame extends Application {
             }
 
         });
+
         stage.show();
 
         AnimationTimer timer = new AnimationTimer() {
@@ -168,7 +176,6 @@ public class BombermanGame extends Application {
                         stillObjects = Bom[i].getStillObjects();
                         /*if(Bom[i].getFrame_bom() == 3*Bom[i].getOne_frame_bom()+1) {
                             if(Bom[i].checkRight() > 0) {
-
                             }
                         }*/
                     }
@@ -184,9 +191,11 @@ public class BombermanGame extends Application {
 
         createMapAfter();
 
+//        Entity balloon = new Ballon(13, 9, Sprite.balloom_left1.getFxImage());
+//        entities.add(balloon);
+        Entity oneal = new Oneal(6, 7, Sprite.oneal_left1.getFxImage(), bomberman);
+        entities.add(oneal);
     }
-
-
     public void createMapAfter() {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
@@ -214,13 +223,13 @@ public class BombermanGame extends Application {
                         entities.add(objects);
                         break;
                     }
-                    case '2' : {
-                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                        stillObjects.add(object);
-                        Entity objects = new Oneal(j, i, Sprite.oneal_left1.getFxImage());
-                        entities.add(objects);
-                        break;
-                    }
+//                    case '2' : {
+//                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
+//                        stillObjects.add(object);
+//                        Entity objects = new Oneal(j, i, Sprite.oneal_left1.getFxImage());
+//                        entities.add(objects);
+//                        break;
+//                    }
                     default: {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
@@ -230,6 +239,7 @@ public class BombermanGame extends Application {
             }
         }
     }
+
     // add Grass before add monster
     public void getMap() {
         BufferedReader bufferedReader = null;
@@ -283,11 +293,10 @@ public class BombermanGame extends Application {
     public void update() {
         entities.forEach(Entity::update);
     }
+
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
     }
-// xin loi nay de ten nham nen phai up lai
-
 }
