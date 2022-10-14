@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.BomItem;
 import uet.oop.bomberman.entities.Enemies.Ballon;
+import uet.oop.bomberman.entities.Enemies.Enemy;
+import uet.oop.bomberman.entities.Enemies.Kondoria;
 import uet.oop.bomberman.entities.Enemies.Oneal;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -181,7 +183,19 @@ public class BombermanGame extends Application {
                     }
                     Bom[i].updateMap(mapMatrix, Row, Col);
                 }
-                bomberman.updateMap(mapMatrix, Row, Col);
+
+                for(int i = 0; i < entities.size(); i++) {
+                    Entity object = entities.get(i);
+                    object.updateMap(mapMatrix, Row, Col);
+
+                    if(object instanceof Enemy) {
+                        if(((Enemy) object).isCan_remove()) {
+                            entities.remove(object);
+                            i--;
+                        }
+                    }
+                }
+                //bomberman.updateMap(mapMatrix, Row, Col);
                 //frameBom();
                 render();
                 update();
@@ -195,6 +209,8 @@ public class BombermanGame extends Application {
 //        entities.add(balloon);
         Entity oneal = new Oneal(6, 7, Sprite.oneal_left1.getFxImage(), bomberman);
         entities.add(oneal);
+        Entity balloon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
+        entities.add(balloon);
     }
     public void createMapAfter() {
         for (int i = 0; i < HEIGHT; i++) {

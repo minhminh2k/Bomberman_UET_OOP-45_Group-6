@@ -9,7 +9,7 @@ import java.util.Random;
 public abstract class Enemy extends Entity {
     protected int animate = 0;
     protected int move_distance = 0;
-    protected final int MAX_ANIMATE = 30;
+    protected int MAX_ANIMATE = 30;
     protected int speed = 1;
     protected Move currentDirection;
     public static final Random rand = new Random();
@@ -19,6 +19,9 @@ public abstract class Enemy extends Entity {
     protected boolean canMoveR;
     protected boolean canMoveU;
     protected boolean canMoveD;
+    protected boolean survive = true;
+    protected boolean can_remove;
+
 
     public Enemy(int x, int y, Image img) {
         super(x, y, img);
@@ -27,12 +30,12 @@ public abstract class Enemy extends Entity {
         Di = 0;
         setIntMap();
         canMove();
+        this.survive = true;
+        this.can_remove = false;
     }
 
     @Override
     public abstract void update();
-
-    public abstract void change_direction();
     public abstract void moveEnemy();
     public abstract void chooseSprite();
     protected void animate() {
@@ -69,30 +72,10 @@ public abstract class Enemy extends Entity {
         if (this.getX() % 32 == 0 && this.getY() % 32 == 0) {
             int x_pos = this.getX() / 32;
             int y_pos = this.getY() / 32;
-            if (mapGame[y_pos][x_pos - 1] == 1) {
-                canMoveL = false;
-            }
-            if (mapGame[y_pos][x_pos + 1] == 1) {
-                canMoveR = false;
-            }
-            if (mapGame[y_pos - 1][x_pos] == 1) {
-                canMoveU = false;
-            }
-            if (mapGame[y_pos + 1][x_pos] == 1) {
-                canMoveD = false;
-            }
-            if (mapGame[y_pos][x_pos - 1] == 0) {
-                canMoveL = true;
-            }
-            if (mapGame[y_pos][x_pos + 1] == 0) {
-                canMoveR = true;
-            }
-            if (mapGame[y_pos - 1][x_pos] == 0) {
-                canMoveU = true;
-            }
-            if (mapGame[y_pos + 1][x_pos] == 0) {
-                canMoveD = true;
-            }
+            canMoveL = map[y_pos][x_pos - 1] == ' ' || map[y_pos][x_pos - 1] == '1' || map[y_pos][x_pos - 1] == '2';
+            canMoveR = map[y_pos][x_pos + 1] == ' ' || map[y_pos][x_pos + 1] == '1' || map[y_pos][x_pos + 1] == '2';
+            canMoveU = map[y_pos - 1][x_pos] == ' ' || map[y_pos - 1][x_pos] == '1' || map[y_pos - 1][x_pos] == '2';
+            canMoveD = map[y_pos + 1][x_pos] == ' ' || map[y_pos + 1][x_pos] == '1' || map[y_pos + 1][x_pos] == '2';
         }
     }
 
@@ -116,5 +99,28 @@ public abstract class Enemy extends Entity {
 
     public int getSpeed() {
         return speed;
+    }
+
+    public boolean isSurvive() {
+        return survive;
+    }
+
+    public void setSurvive(boolean survive) {
+        this.survive = survive;
+    }
+    public void setMAX_ANIMATE(int MAX_ANIMATE) {
+        this.MAX_ANIMATE = MAX_ANIMATE;
+    }
+
+    public void setAnimate(int animate) {
+        this.animate = animate;
+    }
+
+    public boolean isCan_remove() {
+        return can_remove;
+    }
+
+    public void setCan_remove(boolean can_remove) {
+        this.can_remove = can_remove;
     }
 }
