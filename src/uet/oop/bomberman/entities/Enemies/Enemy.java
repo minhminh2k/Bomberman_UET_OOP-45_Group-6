@@ -22,13 +22,11 @@ public abstract class Enemy extends Entity {
     protected boolean survive = true;
     protected boolean can_remove;
 
-
     public Enemy(int x, int y, Image img) {
         super(x, y, img);
         this.randomDirection();
         this.setSpeed(1);
         Di = 0;
-        setIntMap();
         canMove();
         this.survive = true;
         this.can_remove = false;
@@ -36,27 +34,27 @@ public abstract class Enemy extends Entity {
 
     @Override
     public abstract void update();
+
     public abstract void moveEnemy();
+
     public abstract void chooseSprite();
+
+    public void setDead() {
+        this.setSurvive(false);
+        this.setAnimate(0);
+    }
+
+    public void Dead_Animation() {
+        animate();
+        this.chooseSprite();
+        if (this.animate == MAX_ANIMATE) {
+            can_remove = true;
+        }
+    }
+
     protected void animate() {
         if (animate < MAX_ANIMATE) animate++;
         else animate = 0;
-    }
-    public void setIntMap() {
-        mapGame = new int[][]{
-                            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                            {1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1},
-                            {1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-                            {1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-                            {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1},
-                            {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-                            {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1},
-                            {1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                            {1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-                            {1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                            {1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-                            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
     }
 
     public void randomDirection() {
@@ -86,9 +84,11 @@ public abstract class Enemy extends Entity {
     public void setMove_distance(int move_distance) {
         this.move_distance = move_distance;
     }
+
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+
     public Move getCurrentDirection() {
         return currentDirection;
     }
@@ -108,6 +108,7 @@ public abstract class Enemy extends Entity {
     public void setSurvive(boolean survive) {
         this.survive = survive;
     }
+
     public void setMAX_ANIMATE(int MAX_ANIMATE) {
         this.MAX_ANIMATE = MAX_ANIMATE;
     }

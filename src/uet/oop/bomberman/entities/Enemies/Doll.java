@@ -1,16 +1,22 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
-public class Ballon extends Enemy {
+public class Doll extends Enemy {
     private int long_distance;
+    private int count = 0;
 
-    public Ballon(int xUnit, int yUnit, Image img) {
+    public Doll(int xUnit, int yUnit, Image img) {
         super(xUnit, yUnit, img);
-        this.setSpeed(1);
+        this.setSpeed(4);
         long_distance = 0;
+    }
+
+    public void count() {
+        count++;
+        if (count < 20) count++;
+        else count = 0;
     }
 
     @Override
@@ -18,6 +24,7 @@ public class Ballon extends Enemy {
         if (this.isSurvive()) {
             if (this.getMove_distance() == 0) {
                 Di = rand.nextInt(2);
+                count();
             }
             animate();
             canMove();
@@ -25,38 +32,40 @@ public class Ballon extends Enemy {
             this.moveEnemy();
             this.change_direction();
             this.update_Direction(this.move_distance, Di);
-//            if (long_distance >= 200) {
+//            if (long_distance >= 300) {
 //                setDead();
 //            }
         }
         if (!this.isSurvive()) {
             Dead_Animation();
         }
-
     }
 
     public void change_direction() {
-        if (this.isSurvive()) {
-            if (currentDirection == Move.LEFT && !canMoveL) {
-                this.randomDirection();
-                this.setMove_distance(0);
-            }
-            if (currentDirection == Move.RIGHT && !canMoveR) {
-                this.randomDirection();
-                this.setMove_distance(0);
-            }
-            if (currentDirection == Move.UP && !canMoveU) {
-                this.randomDirection();
-                this.setMove_distance(0);
-            }
-            if (currentDirection == Move.DOWN && !canMoveD) {
-                this.randomDirection();
-                this.setMove_distance(0);
+        if (count == 0) {
+            if (this.isSurvive()) {
+                if (currentDirection == Move.LEFT && !canMoveL) {
+                    this.randomDirection();
+                    this.setMove_distance(0);
+                }
+                if (currentDirection == Move.RIGHT && !canMoveR) {
+                    this.randomDirection();
+                    this.setMove_distance(0);
+                }
+                if (currentDirection == Move.UP && !canMoveU) {
+                    this.randomDirection();
+                    this.setMove_distance(0);
+                }
+                if (currentDirection == Move.DOWN && !canMoveD) {
+                    this.randomDirection();
+                    this.setMove_distance(0);
+                }
             }
         }
     }
 
     public void moveEnemy() {
+        if(count == 0) {
         if (this.isSurvive()) {
             if (currentDirection == Move.LEFT && canMoveL) {
                 x = x - speed;
@@ -79,33 +88,36 @@ public class Ballon extends Enemy {
                 long_distance += speed;
             }
         }
+        }
     }
 
     public void update_Direction(int move_distance, int Di) {
-        if (move_distance == (Di + 2) * 32 && this.isSurvive()) {
-            this.setMove_distance(0);
-            this.randomDirection();
+        if(count == 0) {
+            if (move_distance == (Di + 2) * 32 && this.isSurvive()) {
+                this.setMove_distance(0);
+                this.randomDirection();
+            }
         }
     }
 
     public void chooseSprite() {
         if (this.isSurvive()) {
             if (currentDirection == Move.LEFT) {
-                sprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2, Sprite.balloom_left3, animate, MAX_ANIMATE);
+                sprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2, Sprite.doll_left1, animate, MAX_ANIMATE);
             }
             if (currentDirection == Move.RIGHT) {
-                sprite = Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2, Sprite.balloom_right3, animate, MAX_ANIMATE);
+                sprite = Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_right2, Sprite.doll_right3, animate, MAX_ANIMATE);
             }
             if (currentDirection == Move.UP) {
-                sprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2, Sprite.balloom_left3, animate, MAX_ANIMATE);
+                sprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2, Sprite.doll_left3, animate, MAX_ANIMATE);
             }
             if (currentDirection == Move.DOWN) {
-                sprite = Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2, Sprite.balloom_left3, animate, MAX_ANIMATE);
+                sprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2, Sprite.doll_left3, animate, MAX_ANIMATE);
             }
         } else {
             if (!this.isSurvive()) {
                 this.setMAX_ANIMATE(72);
-                sprite = Sprite.movingSprite(Sprite.balloom_dead, Sprite.mob_dead1, Sprite.mob_dead2, Sprite.mob_dead3, animate, MAX_ANIMATE);
+                sprite = Sprite.movingSprite(Sprite.doll_dead, Sprite.mob_dead1, Sprite.mob_dead2, Sprite.mob_dead3, animate, MAX_ANIMATE);
             }
         }
         this.setImg(sprite.getFxImage());

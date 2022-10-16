@@ -30,12 +30,10 @@ public class Kondoria extends Enemy {
     public void update() {
         if (this.isSurvive()) {
             animate();
-            //canMove();
             moveEnemy();
             this.chooseSprite();
 //            if(long_distance >= 320) {
-//                this.setSurvive(false);
-//                this.setAnimate(0);
+//                setDead();
 //            }
         }
         if (!this.isSurvive()) {
@@ -60,7 +58,7 @@ public class Kondoria extends Enemy {
                 sprite = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_left2, Sprite.kondoria_left3, animate, MAX_ANIMATE);
             }
             if (currentDirection == Move.DOWN) {
-                sprite = Sprite.movingSprite(Sprite.kondoria_right1, Sprite.kondoria_right2, Sprite.kondoria_right3, animate, MAX_ANIMATE);
+                sprite = Sprite.movingSprite(Sprite.kondoria_left1, Sprite.kondoria_left2, Sprite.kondoria_left3, animate, MAX_ANIMATE);
             }
         } else {
             if (!this.isSurvive()) {

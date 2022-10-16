@@ -6,27 +6,13 @@ import uet.oop.bomberman.graphics.Sprite;
 
 import java.nio.charset.MalformedInputException;
 
-public class Oneal extends Enemy {
-    private int long_distance;
-    private int moveHori;
-    private int moveVerti;
-    private Entity check_Bomber;
-
+public class Oneal extends AIEnemy {
     public Oneal(int xUnit, int yUnit, Image img, Entity entity) {
-        super(xUnit, yUnit, img);
+        super(xUnit, yUnit, img, entity);
         this.setSpeed(2);
         this.currentDirection = Move.LEFT;
-        check_Bomber = entity;
         this.can_remove = false;
         canMove();
-    }
-
-    public Oneal(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
-        this.setSpeed(2);
-        //setIntMap();
-        canMove();
-        this.currentDirection = Move.LEFT;
     }
 
     @Override
@@ -38,18 +24,12 @@ public class Oneal extends Enemy {
             this.chooseSprite();
             this.update_Speed();
 //            if(long_distance >= 500) {
-//                this.setSurvive(false);
-//                this.setAnimate(0);
+//                setDead();
 //            }
         }
         if(!this.isSurvive()) {
-            animate();
-            this.chooseSprite();
-            if (this.animate == MAX_ANIMATE ) {
-                can_remove = true;
-            }
+            Dead_Animation();
         }
-
     }
 
     public void update_Speed() {

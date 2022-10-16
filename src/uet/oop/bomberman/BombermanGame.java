@@ -10,10 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.BomItem;
-import uet.oop.bomberman.entities.Enemies.Ballon;
-import uet.oop.bomberman.entities.Enemies.Enemy;
-import uet.oop.bomberman.entities.Enemies.Kondoria;
-import uet.oop.bomberman.entities.Enemies.Oneal;
+import uet.oop.bomberman.entities.Enemies.*;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.*;
@@ -160,7 +157,7 @@ public class BombermanGame extends Application {
                 }
             }
             if(bomberman.sizeMoving() == 0 ) {
-                System.out.println("Not moving");
+                //System.out.println("Not moving");
                 bomberman.setMoving(false);
             }
 
@@ -205,12 +202,16 @@ public class BombermanGame extends Application {
 
         createMapAfter();
 
-//        Entity balloon = new Ballon(13, 9, Sprite.balloom_left1.getFxImage());
-//        entities.add(balloon);
         Entity oneal = new Oneal(6, 7, Sprite.oneal_left1.getFxImage(), bomberman);
         entities.add(oneal);
-        Entity balloon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
-        entities.add(balloon);
+        Entity kon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
+        entities.add(kon);
+        Entity ghost = new Ghost(22, 9,Sprite.ghost_left1.getFxImage(), bomberman);
+        entities.add(ghost);
+        Entity doll = new Doll(22, 9 , Sprite.doll_left1.getFxImage());
+        entities.add(doll);
+        Entity minvo = new Minvo(13, 9, Sprite.minvo_left1.getFxImage(), bomberman);
+        entities.add(minvo);
     }
     public void createMapAfter() {
         for (int i = 0; i < HEIGHT; i++) {
