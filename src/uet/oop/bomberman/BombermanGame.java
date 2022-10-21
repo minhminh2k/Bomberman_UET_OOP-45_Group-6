@@ -9,7 +9,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.BomItem;
 import uet.oop.bomberman.entities.Enemies.*;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -20,14 +19,13 @@ import java.util.List;
 public class BombermanGame extends Application {
 
     public static final int WIDTH = 31;
-    public static final int HEIGHT = 13;
+    public static final int HEIGHT = 14;
     public static final int one_frame_bom = 15;
     public int frame_bom = -1;
-    public int numberBom = 1;
-    public int SizeBom = 1;
+    public int numberBom = 2;
+    public int SizeBom = 2;
 
     public char[][] mapMatrix;
-
     public int Row;
     public int Col;
 
@@ -35,10 +33,16 @@ public class BombermanGame extends Application {
     private Canvas canvas;
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
-    BomItem[]Bom = new BomItem[numberBom];
+    private List<Brick> listFlameItem = new ArrayList<>();
+    private List<Brick> deleteFlameItem = new ArrayList<>();
+    private List<Entity> deleteEnemies = new ArrayList<>();
+    private List<Entity> Bom0 = new ArrayList<>();
+    private List<Entity> Bom1 = new ArrayList<>();
+    CheckCollision check = new CheckCollision();
+    BomItem []Bom = new BomItem[3];
     Brick [][]bricks = new Brick[HEIGHT][WIDTH];
-
-    //private Bomber bomberman;
+    public int p = 0;
+    Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -54,11 +58,9 @@ public class BombermanGame extends Application {
         Group root = new Group();
         root.getChildren().add(canvas);
         getMap();
-
-        Bomber bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         entities.add(bomberman);
         bomberman.updateMap(mapMatrix, Row, Col);
-        for( int i = 0; i < numberBom; i++) {
+        for( int i = 0; i < 3; i++) {
             Bom[i] = new BomItem() {
                 @Override
                 public void update() {
@@ -111,12 +113,17 @@ public class BombermanGame extends Application {
                 }
                 case SPACE: {
                     for( int i = 0; i < numberBom; i++) {
-                        if(!Bom[i].status) {
-                            int x = (bomberman.getX()+32)  / 32;
+                        if(!Bom[i].getStatus()) {
+                            int x = (bomberman.getX() + 31)  / 32;
                             x = ( x*32 - bomberman.getX() ) > (bomberman.getX()+32 - 32* x) ? bomberman.getX() / 32 : x;
-                            int y = (bomberman.getY()+ 32)  / 32;
+                            int y = (bomberman.getY() + 31)  / 32;
                             y = ( y*32 - bomberman.getY() ) > (bomberman.getY()+32 - 32* y) ? bomberman.getY() / 32 : y;
-                            Bom[i].setStillObjects(stillObjects);
+                            if( i == 0) {
+                                Bom[0].setStillObjects(Bom0);
+                            }
+                            else {
+                                Bom[1].setStillObjects(Bom1);
+                            }
                             Bom[i].setPos(x,y);
                             break;
                         }
@@ -135,52 +142,63 @@ public class BombermanGame extends Application {
                     if(bomberman.checkStatus("right")){
                         bomberman.deleteMove("right");
                     }
+                    bomberman.updateLastStatus();
                     break;
                 }
                 case LEFT: {
                     if(bomberman.checkStatus("left")){
                         bomberman.deleteMove("left");
                     }
+                    bomberman.updateLastStatus();
                     break;
                 }
                 case UP: {
                     if(bomberman.checkStatus("up")){
                         bomberman.deleteMove("up");
                     }
+                    bomberman.updateLastStatus();
                     break;
                 }
                 case DOWN: {
                     if(bomberman.checkStatus("down")){
                         bomberman.deleteMove("down");
                     }
+                    bomberman.updateLastStatus();
                     break;
                 }
             }
             if(bomberman.sizeMoving() == 0 ) {
-                //System.out.println("Not moving");
                 bomberman.setMoving(false);
             }
 
         });
-
         stage.show();
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 for(int i = 0; i < numberBom; i++) {
+                    Bom[i].setSizeBom(SizeBom);
                     if (Bom[i].getStatus()){
-                        Bom[i].setStillObjects(stillObjects);
+                        if(i == 0) {
+                            Bom[0].setStillObjects(Bom0);
+                        }
+                        else {
+                            Bom[1].setStillObjects(Bom1);
+                        }
                         Bom[i].frameBom();
-                        stillObjects = Bom[i].getStillObjects();
-                        /*if(Bom[i].getFrame_bom() == 3*Bom[i].getOne_frame_bom()+1) {
-                            if(Bom[i].checkRight() > 0) {
-                            }
-                        }*/
+                        handleBrickBom(i);
+
+                        if( i == 0 ) {
+                            Bom0 = Bom[0].getStillObjects();
+                        }
+                        else {
+                            Bom1 = Bom[1].getStillObjects();
+                        }
                     }
+
                     Bom[i].updateMap(mapMatrix, Row, Col);
                 }
-
                 for(int i = 0; i < entities.size(); i++) {
                     Entity object = entities.get(i);
                     object.updateMap(mapMatrix, Row, Col);
@@ -192,8 +210,9 @@ public class BombermanGame extends Application {
                         }
                     }
                 }
+                checkCollision();
+                //checkCollisionWithFlameItem();
                 //bomberman.updateMap(mapMatrix, Row, Col);
-                //frameBom();
                 render();
                 update();
             }
@@ -201,18 +220,11 @@ public class BombermanGame extends Application {
         timer.start();
 
         createMapAfter();
-
-        Entity oneal = new Oneal(6, 7, Sprite.oneal_left1.getFxImage(), bomberman);
-        entities.add(oneal);
-        Entity kon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
-        entities.add(kon);
-        Entity ghost = new Ghost(22, 9,Sprite.ghost_left1.getFxImage(), bomberman);
-        entities.add(ghost);
-        Entity doll = new Doll(22, 9 , Sprite.doll_left1.getFxImage());
-        entities.add(doll);
-        Entity minvo = new Minvo(13, 9, Sprite.minvo_left1.getFxImage(), bomberman);
-        entities.add(minvo);
+        setEnemies();
+        setFlameItemInMap();
     }
+
+
     public void createMapAfter() {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
@@ -224,6 +236,8 @@ public class BombermanGame extends Application {
                         break;
                     }
                     case '*' : {
+                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
+                        stillObjects.add(object);
                         bricks[i][j] = new Brick(j, i, Sprite.brick.getFxImage());
                         stillObjects.add(bricks[i][j]);
                         break;
@@ -256,7 +270,6 @@ public class BombermanGame extends Application {
             }
         }
     }
-
     // add Grass before add monster
     public void getMap() {
         BufferedReader bufferedReader = null;
@@ -310,10 +323,191 @@ public class BombermanGame extends Application {
     public void update() {
         entities.forEach(Entity::update);
     }
-
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
+        Bom0.forEach(g -> g.render(gc));
+        Bom1.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
     }
+    public void handleBrickBom(int i) {
+        int rowY = ( Bom[i].getY() + 16 )/ 32;
+        int colX = ( Bom[i].getX() + 16 ) / 32;
+        if(Bom[i].getFrame_bom() == 5 * Bom[i].getOne_frame_bom()+12) {
+            if(bomberman.isMoving()) {
+                if(Math.abs(bomberman.getX()-Bom[i].getX()) < 32 && Math.abs(bomberman.getY() - Bom[i].getY()) < 32) {
+                    switch (bomberman.getLastStatus()) {
+                        case("right") : {
+                            if(mapMatrix[rowY][colX+1] == ' ') {
+                                bomberman.setPos(Bom[i].getX()+32, Bom[i].getY());
+                            }
+                            break;
+                        }
+                        case("left") : {
+                            if(mapMatrix[rowY][colX - 1] == ' ') {
+                                bomberman.setPos(Bom[i].getX()-32, Bom[i].getY());
+                            }
+                            break;
+
+                        }
+                        case("down") : {
+                            if(mapMatrix[rowY + 1][colX] == ' ') {
+                                bomberman.setPos(Bom[i].getX(), Bom[i].getY() +32);
+                            }
+                            break;
+                        }
+                        case("up") : {
+                            if(mapMatrix[rowY- 1][colX] == ' ') {
+                                bomberman.setPos(Bom[i].getX(), (rowY-1)*32);
+                            }
+                            break;
+                        }
+
+                    }
+                }
+            }
+            mapMatrix[rowY][colX] = 'b';
+        }
+        if(Bom[i].getFrame_bom() == 3 * Bom[i].getOne_frame_bom() ) {
+            mapMatrix[rowY][colX] = ' ';
+        }
+        if(Bom[i].getFrame_bom() == 1) {
+            if(Bom[i].getDistanceRight() > 0) {
+                mapMatrix[rowY][colX+Bom[i].getDistanceRight()] = ' ';
+                Bom[i].setCharAtMap(' ',rowY, colX+Bom[i].getDistanceRight());
+                if(bricks[rowY][colX+Bom[i].getDistanceRight()].getSetItem()) {
+                    bricks[rowY][colX+Bom[i].getDistanceRight()].setImg(bricks[rowY][colX+Bom[i].getDistanceRight()].getFlameItem());
+                    listFlameItem.add(bricks[rowY][colX+Bom[i].getDistanceRight()]);
+                }
+                else {
+                    stillObjects.remove(bricks[rowY][colX+Bom[i].getDistanceRight()]);
+                }
+            }
+            if(Bom[i].getDistanceLeft() > 0) {
+                mapMatrix[rowY][colX-Bom[i].getDistanceLeft()] = ' ';
+                if(bricks[rowY][colX-Bom[i].getDistanceLeft()].getSetItem()) {
+                    bricks[rowY][colX-Bom[i].getDistanceLeft()].setImg(bricks[rowY][colX-Bom[i].getDistanceLeft()].getFlameItem());
+                    listFlameItem.add(bricks[rowY][colX-Bom[i].getDistanceLeft()]);
+                }
+                else {
+                    stillObjects.remove(bricks[rowY][colX-Bom[i].getDistanceLeft()]);
+                }
+            }
+            if(Bom[i].getDistanceUp() > 0) {
+                mapMatrix[rowY-Bom[i].getDistanceUp()][colX] = ' ';
+                if(bricks[rowY-Bom[i].getDistanceUp()][colX].getSetItem()) {
+                    bricks[rowY-Bom[i].getDistanceUp()][colX].setImg(bricks[rowY-Bom[i].getDistanceUp()][colX].getFlameItem());
+                    listFlameItem.add(bricks[rowY-Bom[i].getDistanceUp()][colX]);
+                }
+                else {
+                    stillObjects.remove(bricks[rowY-Bom[i].getDistanceUp()][colX]);
+                }
+            }
+            if(Bom[i].getDistanceDown() > 0) {
+                mapMatrix[rowY+Bom[i].getDistanceDown()][colX] = ' ';
+                if(bricks[rowY+Bom[i].getDistanceDown()][colX].getSetItem()) {
+                    bricks[rowY+Bom[i].getDistanceDown()][colX].setImg(bricks[rowY+Bom[i].getDistanceDown()][colX].getFlameItem());
+                    listFlameItem.add(bricks[rowY+Bom[i].getDistanceDown()][colX]);
+                }
+                else {
+                    stillObjects.remove(bricks[rowY+Bom[i].getDistanceDown()][colX]);
+                }
+            }
+        }
+    }
+    public void setFlameItemInMap() {
+        bricks[3][11].setFlameItem(Sprite.powerup_bombs.getFxImage());
+        bricks[3][11].setPower("bomb");
+        bricks[9][1].setFlameItem(Sprite.powerup_speed.getFxImage());
+        bricks[9][1].setPower("speed");
+        bricks[2][15].setFlameItem(Sprite.powerup_flames.getFxImage());
+        bricks[2][15].setPower("explode");
+    }
+    public void setEnemies() {
+        //Entity balloon = new Ballon(13, 9, Sprite.balloom_left1.getFxImage());
+//      entities.add(balloon);
+        Entity oneal = new Oneal(6, 7, Sprite.oneal_left1.getFxImage(), bomberman);
+        entities.add(oneal);
+        /*Entity balloon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
+        entities.add(balloon);*/
+        Entity kon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
+        entities.add(kon);
+        Entity ghost = new Ghost(22, 9,Sprite.ghost_left1.getFxImage(), bomberman);
+        entities.add(ghost);
+        Entity doll = new Doll(22, 9 , Sprite.doll_left1.getFxImage());
+        entities.add(doll);
+        Entity minvo = new Minvo(13, 9, Sprite.minvo_left1.getFxImage(), bomberman);
+        entities.add(minvo);
+    }
+    public void checkCollision() {
+        checkCollisionWithFlameItem();
+        for(int i = 0; i < numberBom; i++) {
+            if(Bom[i].getStatus()) {
+                for(Entity j: entities) {
+                    if(!(j instanceof Bomber) ) {
+                        if(check.checkCollisionWithBomb(Bom[i], j, Bom[i].getDistanceRight(), Bom[i].getDistanceLeft(),
+                                Bom[i].getDistanceUp(), Bom[i].getDistanceDown())) {
+                            deleteEnemies.add(j);
+                            System.out.println("explode, x= " + j.getX()/32 + ", y=" + (j.getY()+2)/32 + ", bomX= " + Bom[i].getX()/32 + ",bomY= " + Bom[i].getY()/32);
+                        }
+                    }
+                    else  {
+                        if(check.checkCollisionWithBomb(Bom[i], bomberman)) {
+                            bomberman.setPos(Sprite.SCALED_SIZE,2*Sprite.SCALED_SIZE);
+                        }
+                    }
+
+                }
+            }
+        }
+        for(Entity i: deleteEnemies) {
+            entities.remove(i);
+        }
+        deleteEnemies.clear();
+        for(Entity i: entities) {
+            if(!(i instanceof Bomber) ) {
+                if (check.checkCollisionWithEnemy(bomberman, i)) {
+                    bomberman.setPos(Sprite.SCALED_SIZE,Sprite.SCALED_SIZE*2);
+                }
+            }
+        }
+
+    }
+    public void checkCollisionWithFlameItem() {
+        int leftA, leftB;
+        int rightA, rightB;
+        int topA, topB;
+        int bottomA, bottomB;
+        for(Brick i: listFlameItem) {
+            leftA = bomberman.getX();
+            rightA = leftA + 24;
+            topA = bomberman.getY();
+            bottomA = topA + 31;
+            leftB = i.getX();
+            rightB = leftB + 31;
+            topB = i.getY();
+            bottomB = topB + 31;
+            if((bottomB >= topA && rightB >= leftA && rightB - 32 <= leftA && bottomB - 32 <= topA)
+            || (bottomB >= topA && rightA >= leftB && rightA - 24 <= leftB && bottomB - 32 <= topA)
+            || (bottomA >= topB && rightB >= leftA && rightB - 32 <= leftA && bottomA - 32 <= topB)
+            || (bottomA >= topB && rightA >= leftB && rightA - 24 <= leftB && bottomA - 32 <= topB)) {
+                if(i.getPower() == "speed") {
+                    bomberman.setSpeed(bomberman.getSpeed()+1);
+                }
+                else if(i.getPower() == "bomb") {
+                    numberBom ++;
+                }
+                else if(i.getPower() == "explode") {
+                    SizeBom ++;
+                }
+                deleteFlameItem.add(i);
+            }
+        }
+        for(Brick i: deleteFlameItem) {
+            stillObjects.remove(i);
+            listFlameItem.remove(i);
+        }
+        deleteFlameItem.clear();
+    }
+
 }

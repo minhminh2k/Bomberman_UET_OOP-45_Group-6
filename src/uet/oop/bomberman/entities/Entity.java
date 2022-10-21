@@ -2,11 +2,13 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
+
 import java.io.IOException;
+
 
 public abstract class Entity {
     //Tọa độ X tính từ góc trái trên trong Canvas
@@ -14,15 +16,13 @@ public abstract class Entity {
 
     //Tọa độ Y tính từ góc trái trên trong Canvas
     protected int y;
-    protected Sprite sprite;
-    public static char[][] map;
 
     protected Image img;
+
+    protected Sprite sprite;
+    public static char[][] map;
     protected int rowMap;
     protected int colMap;
-    public Entity() {
-
-    }
 
     public void setMap() {
     }
@@ -32,6 +32,10 @@ public abstract class Entity {
         UP,
         RIGHT,
         LEFT;
+    }
+
+    public Entity() {
+
     }
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
@@ -69,7 +73,7 @@ public abstract class Entity {
         this.x = x;
     }
 
-    public void setY(int Y) {
+    public void setY(int y) {
         this.y = y;
     }
 
@@ -95,6 +99,7 @@ public abstract class Entity {
         colMap = col;
         rowMap = row;
     }
+
     public void setPos(int a, int b) {
         x = a;
         y = b;

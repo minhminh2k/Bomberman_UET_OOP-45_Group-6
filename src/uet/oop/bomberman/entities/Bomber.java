@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.BombermanGame;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,9 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Bomber extends Entity {
-    Set<String> move = new HashSet<String>();
+    public Set<String> move = new HashSet<String>();
     public String lastStatus = "right";
-
     public boolean moving = false;
 
     protected int speed = 2;
@@ -48,14 +48,6 @@ public class Bomber extends Entity {
         return move.size();
     }
 
-    public void printStatus() {
-        System.out.println("lan 1");
-        for (String a : move) {
-            System.out.print(a + " ");
-        }
-        System.out.println();
-    }
-
     @Override
     public void update() {
         frameMove();
@@ -64,6 +56,14 @@ public class Bomber extends Entity {
 
     public void updateLastStatus(String s) {
         lastStatus = s;
+    }
+    public void updateLastStatus() {
+        for(String i: move) {
+            lastStatus = i;
+        }
+    }
+    public String getLastStatus() {
+        return  lastStatus;
     }
 
     public void checkCollisionS() {
@@ -202,6 +202,11 @@ public class Bomber extends Entity {
             }
         }
     }
-// xin loi nay de ten nham nen phai up lai
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+    public int getSpeed() {
+        return speed;
+    }
 
 }
