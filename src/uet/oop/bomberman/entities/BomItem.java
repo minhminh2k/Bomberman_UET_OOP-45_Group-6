@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.BombermanGame;
 
@@ -13,7 +14,7 @@ public class BomItem extends Entity {
     public static int WIDTH = 31;
     public static int RowY;
     public static int ColX;
-    public static final int one_frame_bom = 25;
+    public static final int one_frame_bom = 20;
     public int frame_bom = -1;
     public int SizeBom = 2;
     public boolean []checkbomb = new boolean[9];
@@ -54,6 +55,7 @@ public class BomItem extends Entity {
     }
 
     public void setBomExploded() {
+        Sound.playSound(Sound.explosion);
         bomb[0].setImg(Sprite.bomb_exploded.getFxImage());
         int row = bomb[0].getY()/Sprite.SCALED_SIZE;
         int col = bomb[0].getX()/Sprite.SCALED_SIZE;
@@ -174,6 +176,7 @@ public class BomItem extends Entity {
         }
     }
     public void setBomExploded1() {
+        //.playSound(Sound.explosion);
         bomb[0].setImg(Sprite.bomb_exploded1.getFxImage());
         int row = bomb[0].getY()/Sprite.SCALED_SIZE;
         int col = bomb[0].getX()/Sprite.SCALED_SIZE;

@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -13,6 +14,7 @@ public class Ghost extends AIEnemy {
         this.can_remove = false;
         this.currentDirection = Move.LEFT;
         checkStatus();
+        blockBomb();
     }
 
     public void checkStatus() {
@@ -37,9 +39,6 @@ public class Ghost extends AIEnemy {
             moveEnemy_false();
             moveEnemy();
             this.chooseSprite();
-//            if (long_distance >= 800) {
-//                this.setDead();
-//            }
         }
         if (!this.isSurvive()) {
             Dead_Animation();
@@ -91,18 +90,19 @@ public class Ghost extends AIEnemy {
             if ((j * 32 == x && i * 32 == y)) {
                 moveHori = 0;
                 moveVerti = 0;
+                blockBomb();
                 if (j_bomber == j) {
                     moveHori = 0;
-                } else if (j_bomber < j) {
+                } else if (j_bomber < j && canMoveL) {
                     moveHori = -speed;
-                } else {
+                } else if (j_bomber > j && canMoveR){
                     moveHori = speed;
                 }
                 if (i_bomber == i) {
                     moveVerti = 0;
-                } else if (i_bomber < i) {
+                } else if (i_bomber < i && canMoveU) {
                     moveVerti = -speed;
-                } else {
+                } else if (i_bomber > i && canMoveD) {
                     moveVerti = speed;
                 }
                 if (moveVerti != 0 && moveHori != 0) {
@@ -115,11 +115,6 @@ public class Ghost extends AIEnemy {
             }
             x += moveHori;
             y += moveVerti;
-
-            if (moveHori != 0 || moveVerti != 0) {
-                move_distance += speed;
-                long_distance += speed;
-            }
         }
     }
 

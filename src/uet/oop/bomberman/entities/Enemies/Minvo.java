@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -19,9 +20,6 @@ public class Minvo extends AIEnemy {
             canMove();
             moveEnemy();
             this.chooseSprite();
-//            if(long_distance >= 500) {
-//                this.setDead();
-//            }
         }
         if (!this.isSurvive()) {
             Dead_Animation();
@@ -90,10 +88,6 @@ public class Minvo extends AIEnemy {
             }
             x += moveHori;
             y += moveVerti;
-            if (moveHori != 0 || moveVerti != 0) {
-                move_distance += speed;
-                long_distance += speed;
-            }
         }
     }
 }

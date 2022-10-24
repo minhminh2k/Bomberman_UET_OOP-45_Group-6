@@ -1,10 +1,10 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.nio.charset.MalformedInputException;
 
 public class Oneal extends AIEnemy {
     public Oneal(int xUnit, int yUnit, Image img, Entity entity) {
@@ -23,9 +23,6 @@ public class Oneal extends AIEnemy {
             moveEnemy();
             this.chooseSprite();
             this.update_Speed();
-//            if(long_distance >= 500) {
-//                setDead();
-//            }
         }
         if(!this.isSurvive()) {
             Dead_Animation();
@@ -102,10 +99,6 @@ public class Oneal extends AIEnemy {
             }
             x += moveHori;
             y += moveVerti;
-            if (moveHori != 0 || moveVerti != 0) {
-                move_distance += speed;
-                long_distance += speed;
-            }
         }
     }
 }

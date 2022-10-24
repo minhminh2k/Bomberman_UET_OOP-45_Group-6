@@ -1,10 +1,11 @@
 package uet.oop.bomberman.entities;
 
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.Enemies.Enemy;
 import uet.oop.bomberman.entities.BomItem;
 
 public class CheckCollision {
-    public boolean checkCollisionWithEnemy(Bomber bomberman, Entity enemy) {
+    public boolean checkCollisionWithEnemy(Bomber bomberman, Enemy enemy) {
         int leftA, leftB;
         int rightA, rightB;
         int topA, topB;
@@ -21,12 +22,13 @@ public class CheckCollision {
                 || (bottomB >= topA && rightA >= leftB && rightA - 24 <= leftB && bottomB - 32 <= topA)
                 || (bottomA >= topB && rightB >= leftA && rightB - 32 <= leftA && bottomA - 32 <= topB)
                 || (bottomA >= topB && rightA >= leftB && rightA - 24 <= leftB && bottomA - 32 <= topB)) {
+            Sound.playSound(Sound.playerDead);
             return true;
         }
         return false;
     }
 
-    public boolean checkCollisionWithBomb(BomItem bomb, Entity enemy, int right, int left, int up, int down) {
+    public boolean checkCollisionWithBomb(BomItem bomb, Enemy enemy, int right, int left, int up, int down) {
         if(bomb.getFrame_bom() <= bomb.getOne_frame_bom()*3 ) {
             int leftA, leftB;
             int rightA, rightB;
@@ -45,33 +47,38 @@ public class CheckCollision {
             leftB /= 32;
             topB /= 32;
             if(leftA == leftB && topA >= topB - up && topA <= topB + down) {
+                enemy.setDead();
                 return true;
             }
             if(leftA == leftB && bottomA >= topB - up && bottomA <= topB + down) {
+                enemy.setDead();
                 return true;
             }
             if(rightA == leftB && topA >= topB - up && topA <= topB + down ) {
+                enemy.setDead();
                 return true;
             }
             if(rightA == leftB && bottomA >= topB - up && bottomA <= topB + down ) {
+                enemy.setDead();
                 return true;
             }
             if(topA == topB && leftA >= leftB - left && leftA <= leftB + right) {
-
+                enemy.setDead();
                 return true;
             }
             if(bottomA == topB && leftA >= leftB - left && leftA <= leftB + right) {
+                enemy.setDead();
                 return true;
             }
             if(topA == topB && rightA >= leftB - left && rightA <= leftB + right) {
+                enemy.setDead();
                 return true;
             }
             if(bottomA == topB && rightA >= leftB - left && rightA <= leftB + right) {
+                enemy.setDead();
                 return true;
             }
-
         }
-
         return false;
     }
     public boolean checkCollisionWithBomb(BomItem bomb, Bomber bomberman) {
@@ -93,30 +100,37 @@ public class CheckCollision {
             leftB /= 32;
             topB /= 32;
             if(leftA == leftB && topA >= topB - bomb.getDistanceUp() && topA <= topB + bomb.getDistanceDown()) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
             if(leftA == leftB && bottomA >= topB - bomb.getDistanceUp() && bottomA <= topB + bomb.getDistanceDown()) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
             if(rightA == leftB && topA >= topB - bomb.getDistanceUp() && topA <= topB + bomb.getDistanceDown() ) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
             if(rightA == leftB && bottomA >= topB - bomb.getDistanceUp() && bottomA <= topB + bomb.getDistanceDown() ) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
             if(topA == topB && leftA >= leftB - bomb.getDistanceLeft() && leftA <= leftB + bomb.getDistanceRight()) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
             if(bottomA == topB && leftA >= leftB - bomb.getDistanceLeft() && leftA <= leftB + bomb.getDistanceRight()) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
             if(topA == topB && rightA >= leftB - bomb.getDistanceLeft() && rightA <= leftB + bomb.getDistanceRight()) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
             if(bottomA == topB && rightA >= leftB - bomb.getDistanceLeft() && rightA <= leftB + bomb.getDistanceRight()) {
+                Sound.playSound(Sound.playerDead);
                 return true;
             }
-
         }
 
         return false;

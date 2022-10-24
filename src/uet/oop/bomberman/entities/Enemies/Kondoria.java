@@ -1,40 +1,26 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.nio.charset.MalformedInputException;
 
-public class Kondoria extends Enemy {
-    private int long_distance;
-    private int moveHori;
-    private int moveVerti;
-    private Entity check_Bomber;
+public class Kondoria extends AIEnemy {
 
-    public Kondoria(int xUnit, int yUnit, Image img, Entity entity) {
-        super(xUnit, yUnit, img);
+    public Kondoria(int xUnit, int yUnit, Image img, Entity check_Bomber) {
+        super(xUnit, yUnit, img, check_Bomber);
         this.currentDirection = Move.LEFT;
-        check_Bomber = entity;
         this.can_remove = false;
+        blockBomb();
     }
-
-    public Kondoria(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
-        this.setSpeed(2);
-        //setIntMap();
-        this.currentDirection = Move.LEFT;
-    }
-
     @Override
     public void update() {
         if (this.isSurvive()) {
             animate();
             moveEnemy();
             this.chooseSprite();
-//            if(long_distance >= 320) {
-//                setDead();
-//            }
         }
         if (!this.isSurvive()) {
             animate();
@@ -71,34 +57,36 @@ public class Kondoria extends Enemy {
 
     public void moveEnemy() {
         if (this.isSurvive()) {
-            int j_kondoria = ((x + 12) / 32);
-            int i_kondoria = ((y + 16) / 32);
+            int j = ((x + 12) / 32);
+            int i = ((y + 16) / 32);
             int j_bomber = (check_Bomber.getX() + 16) / 32;
             int i_bomber = (check_Bomber.getY() + 16) / 32;
-            if (j_bomber < j_kondoria) {
+            if (j_bomber < j) {
                 this.currentDirection = Move.LEFT;
             } else {
                 this.currentDirection = Move.RIGHT;
             }
-            if ((j_kondoria * 32 == x && i_kondoria * 32 == y)) {
+
+            if ((j * 32 == x && i * 32 == y)) {
                 moveHori = 0;
                 moveVerti = 0;
-                if (j_bomber == j_kondoria) {
+                blockBomb();
+                if (j_bomber == j) {
                     moveHori = 0;
-                } else if (j_bomber < j_kondoria) {
+                } else if (j_bomber < j && canMoveL) {
                     moveHori = -speed;
-                } else {
+                } else if (j_bomber > j && canMoveR){
                     moveHori = speed;
                 }
-                if (i_bomber == i_kondoria) {
+                if (i_bomber == i) {
                     moveVerti = 0;
-                } else if (i_bomber < i_kondoria) {
+                } else if (i_bomber < i && canMoveU) {
                     moveVerti = -speed;
-                } else {
+                } else if (i_bomber > i && canMoveD) {
                     moveVerti = speed;
                 }
                 if (moveVerti != 0 && moveHori != 0) {
-                    if (Math.abs(i_bomber - i_kondoria) > Math.abs(j_bomber - j_kondoria)) {
+                    if (Math.abs(i_bomber - i) > Math.abs(j_bomber - j)) {
                         moveHori = 0;
                     } else {
                         moveVerti = 0;
@@ -107,10 +95,6 @@ public class Kondoria extends Enemy {
             }
             x += moveHori;
             y += moveVerti;
-            if (moveHori != 0 || moveVerti != 0) {
-                move_distance += speed;
-                long_distance += speed;
-            }
         }
     }
 }

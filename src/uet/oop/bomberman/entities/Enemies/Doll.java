@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Doll extends Enemy {
@@ -32,9 +33,6 @@ public class Doll extends Enemy {
             this.moveEnemy();
             this.change_direction();
             this.update_Direction(this.move_distance, Di);
-//            if (long_distance >= 300) {
-//                setDead();
-//            }
         }
         if (!this.isSurvive()) {
             Dead_Animation();
@@ -65,34 +63,34 @@ public class Doll extends Enemy {
     }
 
     public void moveEnemy() {
-        if(count == 0) {
-        if (this.isSurvive()) {
-            if (currentDirection == Move.LEFT && canMoveL) {
-                x = x - speed;
-                move_distance += speed;
-                long_distance += speed;
+        if (count == 0) {
+            if (this.isSurvive()) {
+                if (currentDirection == Move.LEFT && canMoveL) {
+                    x = x - speed;
+                    move_distance += speed;
+                    long_distance += speed;
+                }
+                if (currentDirection == Move.RIGHT && canMoveR) {
+                    x = x + speed;
+                    move_distance += speed;
+                    long_distance += speed;
+                }
+                if (currentDirection == Move.UP && canMoveU) {
+                    y = y - speed;
+                    move_distance += speed;
+                    long_distance += speed;
+                }
+                if (currentDirection == Move.DOWN && canMoveD) {
+                    y = y + speed;
+                    move_distance += speed;
+                    long_distance += speed;
+                }
             }
-            if (currentDirection == Move.RIGHT && canMoveR) {
-                x = x + speed;
-                move_distance += speed;
-                long_distance += speed;
-            }
-            if (currentDirection == Move.UP && canMoveU) {
-                y = y - speed;
-                move_distance += speed;
-                long_distance += speed;
-            }
-            if (currentDirection == Move.DOWN && canMoveD) {
-                y = y + speed;
-                move_distance += speed;
-                long_distance += speed;
-            }
-        }
         }
     }
 
     public void update_Direction(int move_distance, int Di) {
-        if(count == 0) {
+        if (count == 0) {
             if (move_distance == (Di + 2) * 32 && this.isSurvive()) {
                 this.setMove_distance(0);
                 this.randomDirection();

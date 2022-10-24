@@ -1,7 +1,7 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Ballon extends Enemy {
@@ -25,9 +25,6 @@ public class Ballon extends Enemy {
             this.moveEnemy();
             this.change_direction();
             this.update_Direction(this.move_distance, Di);
-//            if (long_distance >= 200) {
-//                setDead();
-//            }
         }
         if (!this.isSurvive()) {
             Dead_Animation();

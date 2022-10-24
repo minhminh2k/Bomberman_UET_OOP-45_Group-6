@@ -1,8 +1,11 @@
 package uet.oop.bomberman.entities.Enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.util.Random;
 
@@ -21,6 +24,7 @@ public abstract class Enemy extends Entity {
     protected boolean canMoveD;
     protected boolean survive = true;
     protected boolean can_remove;
+    protected boolean add_to_remove;
 
     public Enemy(int x, int y, Image img) {
         super(x, y, img);
@@ -30,6 +34,15 @@ public abstract class Enemy extends Entity {
         canMove();
         this.survive = true;
         this.can_remove = false;
+        add_to_remove = false;
+    }
+
+    public boolean isAdd_to_remove() {
+        return add_to_remove;
+    }
+
+    public void setAdd_to_remove(boolean add_to_remove) {
+        this.add_to_remove = add_to_remove;
     }
 
     @Override
@@ -40,8 +53,11 @@ public abstract class Enemy extends Entity {
     public abstract void chooseSprite();
 
     public void setDead() {
-        this.setSurvive(false);
-        this.setAnimate(0);
+        if (this.survive) {
+            this.setSurvive(false);
+            this.setAnimate(0);
+            Sound.playSound(Sound.soundEnemy);
+        }
     }
 
     public void Dead_Animation() {
