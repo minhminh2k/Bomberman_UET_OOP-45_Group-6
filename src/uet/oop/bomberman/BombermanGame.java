@@ -199,25 +199,13 @@ public class BombermanGame extends Application {
 
                     Bom[i].updateMap(mapMatrix, Row, Col);
                 }
-//                for(int i = 0; i < entities.size(); i++) {
-//                    Entity object = entities.get(i);
-//                    object.updateMap(mapMatrix, Row, Col);
-//
-//                    if(object instanceof Enemy) {
-//                        if(((Enemy) object).isCan_remove()) {
-//                            entities.remove(object);
-//                            i--;
-//                        }
-//                    }
-//                }
+
                 for (int i = 0; i < enemies.size(); i++) {
                     Enemy object = enemies.get(i);
                     object.updateMap(mapMatrix, Row, Col);
-//                    if (object.isCan_remove()) {
-//                        enemies.remove(object);
-//                        i--;
-//                    }
                 }
+
+
                 checkCollision();
                 //checkCollisionWithFlameItem();
                 bomberman.updateMap(mapMatrix, Row, Col);
@@ -432,7 +420,7 @@ public class BombermanGame extends Application {
     public void setEnemies() {
         Enemy oneal = new Oneal(6, 7, Sprite.oneal_left1.getFxImage(), bomberman);
         enemies.add(oneal);
-        Enemy kon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
+        Enemy kon = new Kondoria(1, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
         enemies.add(kon);
         Enemy ghost = new Ghost(22, 10, Sprite.ghost_left1.getFxImage(), bomberman);
         enemies.add(ghost);
@@ -467,6 +455,7 @@ public class BombermanGame extends Application {
             if(object.isCan_remove()) {
                 enemies.remove(object);
                 deleteEnemies.remove(object);
+                i--;
             }
         }
         //deleteEnemies.clear();
