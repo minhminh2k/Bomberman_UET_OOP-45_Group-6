@@ -8,6 +8,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import uet.oop.bomberman.entities.Bomber;
 
 public class Sound {
     private static int count = 0;
@@ -18,6 +19,7 @@ public class Sound {
     public static String soundEnemy = "res/SFX/enemy_dead.wav";
     public static String item = "res/SFX/Item.wav";
     public static String setBomb = "res/SFX/setBomb.wav";
+    public static String footStep1 = "res/SFX/Footstep 1.wav";
     public static String EndGame = "res/Music/songs/Endgame.mp3";
     public static MediaPlayer soundBackground = new MediaPlayer(
             new Media(new File("res/Music/game/game2.mp3").toURI().toString()));
@@ -27,6 +29,9 @@ public class Sound {
 
     public static MediaPlayer menuGame = new MediaPlayer(
             new Media(new File("res/Music/menu.mp3").toURI().toString()));
+
+    public static MediaPlayer walk = new MediaPlayer(
+            new Media(new File("res/SFX/Footstep 1.wav").toURI().toString()));
 
     private MediaPlayer mediaPlayer;
 
@@ -68,6 +73,22 @@ public class Sound {
         }
         else {
             soundBackground.pause();
+        }
+    }
+    public void soundMoving(Bomber bomberman) {
+        if(bomberman.isMoving()) {
+            System.out.println("da chay");
+            walk.setVolume(0.2);
+            walk.setOnEndOfMedia(new Runnable() {
+                @Override
+                public void run() {
+                    walk.seek(Duration.ZERO);
+                }
+            });
+            walk.play();
+        }
+        else {
+            walk.pause();
         }
     }
 
