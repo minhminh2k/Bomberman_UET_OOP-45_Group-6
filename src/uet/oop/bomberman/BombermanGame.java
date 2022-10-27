@@ -38,7 +38,6 @@ public class BombermanGame extends Application {
     public Sound sound = new Sound();
     public static final int WIDTH = 31;
     public static final int HEIGHT = 14;
-    public static final int one_frame_bom = 15;
     public int frame_bom = -1;
     public int numberBom = 1;
     public int SizeBom = 1;
@@ -49,7 +48,6 @@ public class BombermanGame extends Application {
 
     private GraphicsContext gc;
     private Canvas canvas;
-    private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> listFlameItem = new ArrayList<>();
     private List<Brick> deleteFlameItem = new ArrayList<>();
@@ -62,9 +60,6 @@ public class BombermanGame extends Application {
     Brick[][] bricks = new Brick[HEIGHT][WIDTH];
     public int p = 0;
     Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
-
-    public BombermanGame() throws URISyntaxException {
-    }
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);

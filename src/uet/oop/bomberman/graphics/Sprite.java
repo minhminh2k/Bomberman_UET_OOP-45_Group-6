@@ -187,7 +187,14 @@ public class Sprite {
 	public static Sprite brick_exploded = new Sprite(DEFAULT_SIZE, 7, 1, SpriteSheet.tiles, 16, 16);
 	public static Sprite brick_exploded1 = new Sprite(DEFAULT_SIZE, 7, 2, SpriteSheet.tiles, 16, 16);
 	public static Sprite brick_exploded2 = new Sprite(DEFAULT_SIZE, 7, 3, SpriteSheet.tiles, 16, 16);
-	
+
+	public static Sprite brick_exploded_map2 = new Sprite(DEFAULT_SIZE, 1, 12, SpriteSheet.tiles, 16, 16);
+	public static Sprite brick_exploded1_map2 = new Sprite(DEFAULT_SIZE, 2, 12, SpriteSheet.tiles, 16, 16);
+	public static Sprite brick_exploded2_map2 = new Sprite(DEFAULT_SIZE, 3, 12, SpriteSheet.tiles, 16, 16);
+	public static Sprite brick_exploded3_map2 = new Sprite(DEFAULT_SIZE, 4, 12, SpriteSheet.tiles, 16, 16);
+	public static Sprite brick_exploded4_map2 = new Sprite(DEFAULT_SIZE, 5, 12, SpriteSheet.tiles, 16, 16);
+	public static Sprite brick_exploded5_map2 = new Sprite(DEFAULT_SIZE, 6, 12, SpriteSheet.tiles, 16, 16);
+
 	/*
 	|--------------------------------------------------------------------------
 	| Powerups
