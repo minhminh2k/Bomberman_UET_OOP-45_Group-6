@@ -36,20 +36,20 @@ public class Sound {
     private MediaPlayer mediaPlayer;
 
     public void init() {
-            try {
-                mediaList.add(new Media(new File("res/SFX/Action Misc 5.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 6.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 7.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 8.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 9.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 10.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 11.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 12.wav").toURI().toString()));
-                mediaList.add(new Media(new File("res/SFX/Action Misc 13.wav").toURI().toString()));
-            } catch (Exception e) {
-                System.out.println("Sound Constructor Error");
-            }
+        try {
+            mediaList.add(new Media(new File("res/SFX/Action Misc 5.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 6.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 7.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 8.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 9.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 10.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 11.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 12.wav").toURI().toString()));
+            mediaList.add(new Media(new File("res/SFX/Action Misc 13.wav").toURI().toString()));
+        } catch (Exception e) {
+            System.out.println("Sound Constructor Error");
         }
+    }
     public static void playSound(String path) {
         try {
             MediaPlayer sound = new MediaPlayer(new Media(new File(path).toURI().toString()));
@@ -77,8 +77,8 @@ public class Sound {
     }
     public void soundMoving(Bomber bomberman) {
         if(bomberman.isMoving()) {
-            System.out.println("da chay");
-            walk.setVolume(0.2);
+            //System.out.println("da chay");
+            walk.setVolume(0.8);
             walk.setOnEndOfMedia(new Runnable() {
                 @Override
                 public void run() {

@@ -86,10 +86,22 @@ public abstract class Enemy extends Entity {
         if (this.getX() % 32 == 0 && this.getY() % 32 == 0) {
             int x_pos = this.getX() / 32;
             int y_pos = this.getY() / 32;
-            canMoveL = map[y_pos][x_pos - 1] == ' ' || map[y_pos][x_pos - 1] == '1' || map[y_pos][x_pos - 1] == '2';
-            canMoveR = map[y_pos][x_pos + 1] == ' ' || map[y_pos][x_pos + 1] == '1' || map[y_pos][x_pos + 1] == '2';
-            canMoveU = map[y_pos - 1][x_pos] == ' ' || map[y_pos - 1][x_pos] == '1' || map[y_pos - 1][x_pos] == '2';
-            canMoveD = map[y_pos + 1][x_pos] == ' ' || map[y_pos + 1][x_pos] == '1' || map[y_pos + 1][x_pos] == '2';
+            canMoveL = map[y_pos][x_pos - 1] == ' ' || map[y_pos][x_pos - 1] == '1' || map[y_pos][x_pos - 1] == '2'
+                    || map[y_pos][x_pos - 1] == '3' || map[y_pos][x_pos - 1] == '4' || map[y_pos][x_pos - 1] == '5'
+                    || map[y_pos][x_pos - 1] == '6' || map[y_pos][x_pos - 1] == 'b' || map[y_pos][x_pos - 1] == 'e'
+                    || map[y_pos][x_pos - 1] == 's';
+            canMoveR = map[y_pos][x_pos + 1] == ' ' || map[y_pos][x_pos + 1] == '1' || map[y_pos][x_pos + 1] == '2'
+                    || map[y_pos][x_pos + 1] == '3' || map[y_pos][x_pos + 1] == '4' || map[y_pos][x_pos + 1] == '5'
+                    || map[y_pos][x_pos + 1] == '6' || map[y_pos][x_pos + 1] == 'b' || map[y_pos][x_pos + 1] == 'e'
+                    || map[y_pos][x_pos + 1] == 's';
+            canMoveU = map[y_pos - 1][x_pos] == ' ' || map[y_pos - 1][x_pos] == '1' || map[y_pos - 1][x_pos] == '2'
+                    || map[y_pos - 1][x_pos] == '3' || map[y_pos - 1][x_pos] == '4' || map[y_pos - 1][x_pos] == '5'
+                    || map[y_pos - 1][x_pos] == '6' || map[y_pos - 1][x_pos] == 'b' || map[y_pos - 1][x_pos] == 'e'
+                    || map[y_pos - 1][x_pos] == 's';
+            canMoveD = map[y_pos + 1][x_pos] == ' ' || map[y_pos + 1][x_pos] == '1' || map[y_pos + 1][x_pos] == '2'
+                    || map[y_pos + 1][x_pos] == '3' || map[y_pos + 1][x_pos] == '4' || map[y_pos + 1][x_pos] == '5'
+                    || map[y_pos + 1][x_pos] == '6' || map[y_pos + 1][x_pos] == 'b' || map[y_pos + 1][x_pos] == 'e'
+                    || map[y_pos + 1][x_pos] == 's';
         }
     }
 

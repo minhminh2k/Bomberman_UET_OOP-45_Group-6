@@ -7,40 +7,53 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import uet.oop.bomberman.Maps.MapLevel;
 import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.*;
+import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.Item.BomItem;
 import uet.oop.bomberman.entities.Item.FlameItem;
 import uet.oop.bomberman.entities.TitleMap.Brick;
 import uet.oop.bomberman.entities.TitleMap.Grass;
 import uet.oop.bomberman.entities.TitleMap.Wall;
-import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
+    private MapLevel map = new MapLevel();
+    private Text scoreText = new Text();
+    private int score = 0;
+    private int new_score = 0;
+    private Font font = Font.loadFont("file:res/Fonts/SHOWG.ttf", 20);
     public Sound sound = new Sound();
     public static final int WIDTH = 31;
     public static final int HEIGHT = 14;
+    public static final int one_frame_bom = 15;
     public int frame_bom = -1;
     public int numberBom = 1;
     public int SizeBom = 1;
 
-    public char[][] mapMatrix;
-    public int Row;
-    public int Col;
+    public char[][] mapMatrix = new char[HEIGHT][WIDTH];
+    public int Row = HEIGHT;
+    public int Col = WIDTH;
 
     private GraphicsContext gc;
     private Canvas canvas;
+    private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> listFlameItem = new ArrayList<>();
     private List<Brick> deleteFlameItem = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
-
     private List<Enemy> deleteEnemies = new ArrayList<>();
     private List<Entity> Bom0 = new ArrayList<>();
     private List<Entity> Bom1 = new ArrayList<>();
@@ -49,6 +62,9 @@ public class BombermanGame extends Application {
     Brick[][] bricks = new Brick[HEIGHT][WIDTH];
     public int p = 0;
     Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
+
+    public BombermanGame() throws URISyntaxException {
+    }
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -60,11 +76,24 @@ public class BombermanGame extends Application {
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
 
+        Text text = new Text();
+        text.setFont(font);
+        text.setFill(Color.ORANGERED);
+        scoreText.setFont(font);
+        scoreText.setFill(Color.ORANGERED);
+        scoreText.setX(100);
+        scoreText.setY(25);
+        scoreText.setText(Integer.toString(score));
+
+        text.setX(25);
+        text.setY(25);
+        text.setText("Score: ");
+
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
-
-        getMap();
+        root.getChildren().addAll(text, scoreText);
+        mapMatrix = map.createMap('1');
 
         bomberman.updateMap(mapMatrix, Row, Col);
         for (int i = 0; i < 3; i++) {
@@ -83,6 +112,7 @@ public class BombermanGame extends Application {
                 };
             }
         }
+
 
         // Tao scene
         Scene scene = new Scene(root);
@@ -203,10 +233,16 @@ public class BombermanGame extends Application {
 
                     Bom[i].updateMap(mapMatrix, Row, Col);
                 }
+
                 for (int i = 0; i < enemies.size(); i++) {
                     Enemy object = enemies.get(i);
                     object.updateMap(mapMatrix, Row, Col);
                 }
+                if (score != new_score) {
+                    new_score = score;
+                    scoreText.setText(Integer.toString(score));
+                }
+
                 sound.soundMoving(bomberman);
                 sound.playBackground();
                 checkCollision();
@@ -215,111 +251,10 @@ public class BombermanGame extends Application {
             }
         };
         timer.start();
-        createMapAfter();
-        setEnemies();
+
+        map.addEntity_map1(stillObjects, bricks, enemies, bomberman);
     }
 
-
-    public void createMapAfter() {
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                char txt = mapMatrix[i][j];
-                switch (txt) {
-                    case '#': {
-                        Entity object = new Wall(j, i, Sprite.wall.getFxImage());
-                        stillObjects.add(object);
-                        break;
-                    }
-                    case '*': {
-                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                        stillObjects.add(object);
-                        bricks[i][j] = new Brick(j, i, Sprite.brick.getFxImage());
-                        stillObjects.add(bricks[i][j]);
-                        break;
-                    }
-                    case 'f': {
-                        Entity object = new FlameItem(j, i, Sprite.powerup_flames.getFxImage());
-                        stillObjects.add(object);
-                        break;
-                    }
-                    case '1': {
-                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                        stillObjects.add(object);
-                        Enemy objects = new Ballon(j, i, Sprite.balloom_left3.getFxImage());
-                        enemies.add(objects);
-                        break;
-                    }
-                    case 'b': {
-                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                        stillObjects.add(object);
-                        bricks[i][j] = new Brick(j, i, Sprite.brick.getFxImage());
-                        bricks[i][j].setFlameItem(Sprite.powerup_bombs.getFxImage());
-                        bricks[i][j].setPower("bomb");
-                        stillObjects.add(bricks[i][j]);
-                        break;
-                    }
-                    case 'e': {
-                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                        stillObjects.add(object);
-                        bricks[i][j] = new Brick(j, i, Sprite.brick.getFxImage());
-                        bricks[i][j].setFlameItem(Sprite.powerup_flames.getFxImage());
-                        bricks[i][j].setPower("explode");
-                        stillObjects.add(bricks[i][j]);
-                        break;
-                    }
-                    case 's': {
-                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                        stillObjects.add(object);
-                        bricks[i][j] = new Brick(j, i, Sprite.brick.getFxImage());
-                        bricks[i][j].setFlameItem(Sprite.powerup_speed.getFxImage());
-                        bricks[i][j].setPower("speed");
-                        stillObjects.add(bricks[i][j]);
-                        break;
-                    }
-                    default: {
-                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                        stillObjects.add(object);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    public void getMap() {
-        BufferedReader bufferedReader = null;
-        BufferedWriter bufferedWriter = null;
-
-        try {
-            Reader reader = new FileReader("res/levels/Level1.txt");
-            bufferedReader = new BufferedReader(reader);
-
-            int level, row, column;
-            String c = bufferedReader.readLine();
-            String[] tokens = c.split("\\s");
-            level = Integer.parseInt(tokens[0]);
-            Row = row = Integer.parseInt(tokens[1]);
-            Col = column = Integer.parseInt(tokens[2]);
-
-            mapMatrix = new char[row][column];
-            for (int i = 0; i < row; i++) {
-                String rowText = bufferedReader.readLine();
-                for (int j = 0; j < column; j++) {
-                    mapMatrix[i][j] = rowText.charAt(j);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public void update() {
         enemies.forEach(Entity::update);
@@ -343,18 +278,18 @@ public class BombermanGame extends Application {
             mapMatrix[rowY][colX] = 'p';
             bomberman.checkOutBomb(Bom[i]);
         }
-        if (Bom[i].getFrame_bom() == 3 * Bom[i].getOne_frame_bom()+1) {
+        if (Bom[i].getFrame_bom() == 3 * Bom[i].getOne_frame_bom() + 1) {
             mapMatrix[rowY][colX] = ' ';
-            if(Bom[i].getDistanceRight() > 0) {
+            if (Bom[i].getDistanceRight() > 0) {
                 bricks[rowY][colX + Bom[i].getDistanceRight()].brickStartexploded();
             }
-            if(Bom[i].getDistanceLeft() > 0) {
+            if (Bom[i].getDistanceLeft() > 0) {
                 bricks[rowY][colX - Bom[i].getDistanceLeft()].brickStartexploded();
             }
-            if(Bom[i].getDistanceUp() > 0) {
+            if (Bom[i].getDistanceUp() > 0) {
                 bricks[rowY - Bom[i].getDistanceUp()][colX].brickStartexploded();
             }
-            if(Bom[i].getDistanceDown() > 0) {
+            if (Bom[i].getDistanceDown() > 0) {
                 bricks[rowY + Bom[i].getDistanceDown()][colX].brickStartexploded();
             }
         }
@@ -402,25 +337,13 @@ public class BombermanGame extends Application {
         }
     }
 
-    public void setEnemies() {
-        Enemy oneal = new Oneal(6, 7, Sprite.oneal_left1.getFxImage(), bomberman);
-        enemies.add(oneal);
-        Enemy kon = new Kondoria(10, 10, Sprite.kondoria_left1.getFxImage(), bomberman);
-        enemies.add(kon);
-        Enemy ghost = new Ghost(22, 10, Sprite.ghost_left1.getFxImage(), bomberman);
-        enemies.add(ghost);
-        Enemy doll = new Doll(22, 9, Sprite.doll_left1.getFxImage());
-        enemies.add(doll);
-        Enemy minvo = new Minvo(13, 9, Sprite.minvo_left1.getFxImage(), bomberman);
-        enemies.add(minvo);
-    }
-
     public void checkCollision() {
         for (int i = 0; i < numberBom; i++) {
             if (Bom[i].getStatus()) {
                 for (Enemy j : enemies) {
                     if (check.checkCollisionWithBomb(Bom[i], j, Bom[i].getDistanceRight(), Bom[i].getDistanceLeft(),
                             Bom[i].getDistanceUp(), Bom[i].getDistanceDown()) && !j.isAdd_to_remove()) {
+                        score += 200;
                         j.setAdd_to_remove(true);
                         deleteEnemies.add(j);
                     }

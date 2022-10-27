@@ -17,10 +17,10 @@ public abstract class AIEnemy extends Enemy {
         if (this.getX() % 32 == 0 && this.getY() % 32 == 0) {
             int x_pos = this.getX() / 32;
             int y_pos = this.getY() / 32;
-            canMoveL = map[y_pos][x_pos - 1] != 'b';
-            canMoveR = map[y_pos][x_pos + 1] != 'b';
-            canMoveU = map[y_pos - 1][x_pos] != 'b';
-            canMoveD = map[y_pos + 1][x_pos] != 'b';
+            canMoveL = map[y_pos][x_pos - 1] != 'p';
+            canMoveR = map[y_pos][x_pos + 1] != 'p';
+            canMoveU = map[y_pos - 1][x_pos] != 'p';
+            canMoveD = map[y_pos + 1][x_pos] != 'p';
         }
     }
 
