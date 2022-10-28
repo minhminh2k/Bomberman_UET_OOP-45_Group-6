@@ -48,6 +48,7 @@ public class BombermanGame extends Application {
 
     private GraphicsContext gc;
     private Canvas canvas;
+    private List<Entity> lifes = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> listFlameItem = new ArrayList<>();
     private List<Brick> deleteFlameItem = new ArrayList<>();
@@ -88,7 +89,8 @@ public class BombermanGame extends Application {
         Group root = new Group();
         root.getChildren().add(canvas);
         root.getChildren().addAll(text, scoreText);
-        mapMatrix = map.createMap('1');
+        mapMatrix = map.createMap('2');
+        //map.printArray();
 
         bomberman.updateMap(mapMatrix, Row, Col);
         for (int i = 0; i < 3; i++) {
@@ -247,7 +249,7 @@ public class BombermanGame extends Application {
         };
         timer.start();
 
-        map.addEntity_map1(stillObjects, bricks, enemies, bomberman);
+        map.addEntity_map2(stillObjects, bricks, enemies, bomberman, lifes);
     }
 
 
@@ -255,6 +257,7 @@ public class BombermanGame extends Application {
         enemies.forEach(Entity::update);
         bomberman.update();
         stillObjects.forEach(Entity::update);
+        lifes.forEach(Entity::update);
     }
 
     public void render() {
@@ -264,6 +267,7 @@ public class BombermanGame extends Application {
         Bom1.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
         bomberman.render(gc);
+        lifes.forEach(g -> g.render(gc));
     }
 
     public void handleBrickBom(int i) {
@@ -345,6 +349,9 @@ public class BombermanGame extends Application {
                 }
                 if (check.checkCollisionWithBomb(Bom[i], bomberman)) {
                     bomberman.setPos(Sprite.SCALED_SIZE, 2 * Sprite.SCALED_SIZE, true);
+                    if (lifes.size() != 0) {
+                        lifes.remove(lifes.size() - 1);
+                    }
                 }
             }
         }
@@ -376,6 +383,9 @@ public class BombermanGame extends Application {
         for (Enemy i : enemies) {
             if (check.checkCollisionWithEnemy(bomberman, i) ) {
                 bomberman.setPos(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE * 2, true);
+                if (lifes.size() != 0) {
+                    lifes.remove(lifes.size() - 1);
+                }
             }
         }
 

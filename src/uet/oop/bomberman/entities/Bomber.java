@@ -386,7 +386,7 @@ public class Bomber extends Entity {
 
     boolean canMove(int i, int j) {
         if (map[i][j] == ' ' || ( map[i][j] == 'p' && !outBomb) || map[i][j] == '1' || map[i][j] == '2' || map[i][j] == '3'
-                || map[i][j] == '4' || map[i][j] == '5' || map[i][j] == '6') {
+                || map[i][j] == '4' || map[i][j] == '5' || map[i][j] == '6' || map[i][j] == 'x') {
             return true;
         }
         return false;
