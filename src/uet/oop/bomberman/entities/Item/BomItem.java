@@ -4,7 +4,6 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.Sound.Sound;
-import uet.oop.bomberman.BombermanGame;
 
 import java.util.ArrayList;
 import java.util.List;

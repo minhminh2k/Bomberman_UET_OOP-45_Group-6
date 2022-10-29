@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9992b959-0bd0-4257-93b5-15001d80a6fb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/GameplayManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/MainMenu/ExitButton.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/MainMenu/HelpButton.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/MainMenu/MainSceneManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/MainMenu/NewGameButton.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/MainMenu/PauseSubsceneManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/MainMenu/ResumeButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/uet/oop/bomberman/BombermanGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/BombermanGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/Item/BomItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/Item/BomItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/Menu/MenuButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/MainMenu/MyButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/uet/oop/bomberman/entities/Menu/MenuManager.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2FhWPB9WLv9Qh2SZHMuRFzLuNU1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Asus/Desktop/Bomberman_UET_OOP-45_Group-2/src/uet/oop/bomberman/entities"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Asus\Desktop\Bomberman_UET_OOP-45_Group-2\src\uet\oop\bomberman\entities" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="uet.oop.bomberman" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9992b959-0bd0-4257-93b5-15001d80a6fb" name="Changes" comment="" />
+      <created>1664944770461</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1664944770461</updated>
+      <workItem from="1664944773109" duration="1034000" />
+      <workItem from="1666584116720" duration="1051000" />
+      <workItem from="1666585190028" duration="1744000" />
+      <workItem from="1666606114796" duration="1383000" />
+      <workItem from="1666701298265" duration="118000" />
+      <workItem from="1666782104674" duration="180000" />
+      <workItem from="1666805805041" duration="2152000" />
+      <workItem from="1667033310494" duration="2101000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
