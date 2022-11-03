@@ -6,7 +6,6 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Minvo extends AIEnemy {
-
     public Minvo(int x, int y, Image img, Entity check_Bomber) {
         super(x, y, img, check_Bomber);
         this.setSpeed(2);

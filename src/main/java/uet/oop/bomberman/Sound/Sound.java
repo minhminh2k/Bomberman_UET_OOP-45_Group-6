@@ -76,24 +76,28 @@ public class Sound {
         }
     }
     public void soundMoving(Bomber bomberman) {
-        if(bomberman.isMoving()) {
-            //System.out.println("da chay");
-            walk.setVolume(0.8);
-            walk.setOnEndOfMedia(new Runnable() {
-                @Override
-                public void run() {
-                    walk.seek(Duration.ZERO);
-                }
-            });
-            walk.play();
-        }
-        else {
-            walk.pause();
+        if(bomberman != null) {
+            if (bomberman.isMoving()) {
+                //System.out.println("da chay");
+                walk.setVolume(0.8);
+                walk.setOnEndOfMedia(new Runnable() {
+                    @Override
+                    public void run() {
+                        walk.seek(Duration.ZERO);
+                    }
+                });
+                walk.play();
+            } else {
+                walk.pause();
+            }
         }
     }
 
 
     public static void stopBackground() {
         soundBackground.stop();
+    }
+    public static void pauseBackground() {
+        soundBackground.pause();
     }
 }

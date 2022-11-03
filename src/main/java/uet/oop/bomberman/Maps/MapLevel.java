@@ -16,7 +16,7 @@ public class MapLevel {
     private static final int WIDTH = 31;
     private char[][] mapMatrix = new char[HEIGHT][WIDTH];
 
-    public char[][] createMap(char levels) {
+    public char[][] createMap(int levels) {
         BufferedReader bufferedReader = null;
         BufferedWriter bufferedWriter = null;
         try {
@@ -57,7 +57,7 @@ public class MapLevel {
                 char txt = mapMatrix[i][j];
                 switch (txt) {
                     case 'x': {
-                        Entity object = new Grass(j, i, Sprite.grass_map2.getFxImage());
+                        Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Entity objects = new Grass(j, i, Sprite.portal.getFxImage());
                         stillObjects.add(objects);
@@ -65,10 +65,15 @@ public class MapLevel {
 //                        stillObjects.add(bricks[i][j]);
                         break;
                     }
+                    case 'o': {
+                        Entity object = new Grass(j, i, Sprite.white.getFxImage());
+                        stillObjects.add(object);
+                        break;
+                    }
                     case 'l': {
-                        bricks[i][j] = new Brick(j, i, Sprite.brick.getFxImage());
-                        stillObjects.add(bricks[i][j]);
-                        Entity objects = new Life(j, i, Sprite.player_right_2.getFxImage());
+                        Entity object = new Grass(j, i, Sprite.white.getFxImage());
+                        stillObjects.add(object);
+                        Entity objects = new Life(j, i, Sprite.heart.getFxImage());
                         lifes.add(objects);
                         break;
                     }
@@ -178,10 +183,15 @@ public class MapLevel {
 //                        stillObjects.add(bricks[i][j]);
                         break;
                     }
+                    case 'o': {
+                        Entity object = new Grass(j, i, Sprite.white.getFxImage());
+                        stillObjects.add(object);
+                        break;
+                    }
                     case 'l': {
-                        bricks[i][j] = new Brick(j, i, Sprite.brick_map2.getFxImage());
-                        stillObjects.add(bricks[i][j]);
-                        Entity objects = new Life(j, i, Sprite.player_right_2.getFxImage());
+                        Entity object = new Grass(j, i, Sprite.white.getFxImage());
+                        stillObjects.add(object);
+                        Entity objects = new Life(j, i, Sprite.heart.getFxImage());
                         lifes.add(objects);
                         break;
                     }

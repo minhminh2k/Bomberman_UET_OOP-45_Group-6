@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameplayManager {
+    public int level = 1;
     private GraphicsContext gc;
     private Canvas canvas;
     private Scene scene;
@@ -43,9 +44,10 @@ public class GameplayManager {
     private AnimationTimer timer;
     private MapLevel map = new MapLevel();
     private Text scoreText = new Text();
+    Text text = new Text();
     private int score = 0;
     private int new_score = 0;
-    private Font font = Font.loadFont("file:res/Fonts/SHOWG.ttf", 20);
+    private Font font = Font.loadFont("file:res/BreathFire.ttf", 25);
     public Sound sound = new Sound();
     public static final int WIDTH = 31;
     public static final int HEIGHT = 14;
@@ -53,10 +55,9 @@ public class GameplayManager {
     public int numberBom = 1;
     public int SizeBom = 1;
 
-    public char[][] mapMatrix = new char[HEIGHT][WIDTH];
+    public static char[][] mapMatrix = new char[HEIGHT][WIDTH];
     public int Row = HEIGHT;
     public int Col = WIDTH;
-
     private List<Entity> lifes = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
     private List<Brick> listFlameItem = new ArrayList<>();
@@ -84,194 +85,181 @@ public class GameplayManager {
         root.getChildren().add(canvas);
         root.getChildren().add(pauseScene);
         scene = new Scene(root);
+        stage.setTitle("Bomberman");
         stage.setScene(scene);
         stage.show();
 
+        addText();
 
-        Text text = new Text();
-        text.setFont(font);
-        text.setFill(Color.ORANGERED);
-        scoreText.setFont(font);
-        scoreText.setFill(Color.ORANGERED);
-        scoreText.setX(100);
-        scoreText.setY(25);
-        scoreText.setText(Integer.toString(score));
+        if(bomberman != null) {
+            mapMatrix = map.createMap(level);
 
-        text.setX(25);
-        text.setY(25);
-        text.setText("Score: ");
-
-        root.getChildren().addAll(text, scoreText);
-        mapMatrix = map.createMap('2');
-        //map.printArray();
-
-        bomberman.updateMap(mapMatrix, Row, Col);
-        for (int i = 0; i < 3; i++) {
-            Bom[i] = new BomItem() {
-                @Override
-                public void update() {
-                }
-            };
-            Bom[i].setSize(HEIGHT, WIDTH);
-        }
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                bricks[i][j] = new Brick() {
+            //bomberman.updateMap(mapMatrix, Row, Col);
+            for (int i = 0; i < 3; i++) {
+                Bom[i] = new BomItem() {
+                    @Override
                     public void update() {
                     }
                 };
+                Bom[i].setSize(HEIGHT, WIDTH);
             }
-        }
+            for (int i = 0; i < HEIGHT; i++) {
+                for (int j = 0; j < WIDTH; j++) {
+                    bricks[i][j] = new Brick() {
+                        public void update() {
+                        }
+                    };
+                }
+            }
+            scene.setOnKeyPressed(keyEvent -> {
+                KeyCode keyCode = keyEvent.getCode();
 
-        scene.setOnKeyPressed(keyEvent -> {
-            KeyCode keyCode = keyEvent.getCode();
-
-            switch (keyCode) {
-                case BACK_SPACE: {
-                    if (!isPaused){
-                        pauseGame();
+                switch (keyCode) {
+                    case BACK_SPACE: {
+                        if (!isPaused) {
+                            pauseGame();
+                            break;
+                        } else {
+                            resumeGame();
+                            break;
+                        }
+                    }
+                    case RIGHT: {
+                        bomberman.setMoving(true);
+                        bomberman.addMove("right");
+                        bomberman.updateLastStatus("right");
                         break;
-                    } else {
-                        resumeGame();
+                    }
+                    case LEFT: {
+                        bomberman.setMoving(true);
+                        bomberman.addMove("left");
+                        bomberman.updateLastStatus("left");
+                        break;
+                    }
+                    case UP: {
+                        bomberman.setMoving(true);
+                        bomberman.addMove("up");
+                        bomberman.updateLastStatus("up");
+                        break;
+                    }
+                    case DOWN: {
+                        bomberman.setMoving(true);
+                        bomberman.addMove("down");
+                        bomberman.updateLastStatus("down");
+                        break;
+                    }
+                    case SPACE: {
+                        for (int i = 0; i < numberBom; i++) {
+                            if (!Bom[i].getStatus()) {
+                                int x = (bomberman.getX() + 31) / 32;
+                                x = (x * 32 - bomberman.getX()) > (bomberman.getX() + 32 - 32 * x) ? bomberman.getX() / 32 : x;
+                                int y = (bomberman.getY() + 31) / 32;
+                                y = (y * 32 - bomberman.getY()) > (bomberman.getY() + 32 - 32 * y) ? bomberman.getY() / 32 : y;
+                                if (i == 0) {
+                                    Bom[0].setStillObjects(Bom0);
+                                } else {
+                                    Bom[1].setStillObjects(Bom1);
+                                }
+                                bomberman.setOutBomb(false);
+                                Bom[i].setPos(x, y);
+                                break;
+                            }
+                        }
+                    }
+
+                }
+                //bomberman.updateLastStatus();
+
+            });
+            scene.setOnKeyReleased(keyEvent -> {
+                KeyCode keyCode = keyEvent.getCode();
+                switch (keyCode) {
+
+                    case RIGHT: {
+                        if (bomberman.checkStatus("right")) {
+                            bomberman.deleteMove("right");
+                        }
+                        bomberman.updateLastStatus();
+                        break;
+                    }
+                    case LEFT: {
+                        if (bomberman.checkStatus("left")) {
+                            bomberman.deleteMove("left");
+                        }
+                        bomberman.updateLastStatus();
+                        break;
+                    }
+                    case UP: {
+                        if (bomberman.checkStatus("up")) {
+                            bomberman.deleteMove("up");
+                        }
+                        bomberman.updateLastStatus();
+                        break;
+                    }
+                    case DOWN: {
+                        if (bomberman.checkStatus("down")) {
+                            bomberman.deleteMove("down");
+                        }
+                        bomberman.updateLastStatus();
                         break;
                     }
                 }
-                case RIGHT: {
-                    bomberman.setMoving(true);
-                    bomberman.addMove("right");
-                    bomberman.updateLastStatus("right");
-                    break;
+                if (bomberman.sizeMoving() == 0) {
+                    bomberman.setMoving(false);
                 }
-                case LEFT: {
-                    bomberman.setMoving(true);
-                    bomberman.addMove("left");
-                    bomberman.updateLastStatus("left");
-                    break;
-                }
-                case UP: {
-                    bomberman.setMoving(true);
-                    bomberman.addMove("up");
-                    bomberman.updateLastStatus("up");
-                    break;
-                }
-                case DOWN: {
-                    bomberman.setMoving(true);
-                    bomberman.addMove("down");
-                    bomberman.updateLastStatus("down");
-                    break;
-                }
-                case SPACE: {
+
+            });
+
+            timer = new AnimationTimer() {
+                @Override
+                public void handle(long l) {
                     for (int i = 0; i < numberBom; i++) {
-                        if (!Bom[i].getStatus()) {
-                            int x = (bomberman.getX() + 31) / 32;
-                            x = (x * 32 - bomberman.getX()) > (bomberman.getX() + 32 - 32 * x) ? bomberman.getX() / 32 : x;
-                            int y = (bomberman.getY() + 31) / 32;
-                            y = (y * 32 - bomberman.getY()) > (bomberman.getY() + 32 - 32 * y) ? bomberman.getY() / 32 : y;
+                        Bom[i].setSizeBom(SizeBom);
+                        if (Bom[i].getStatus()) {
                             if (i == 0) {
                                 Bom[0].setStillObjects(Bom0);
                             } else {
                                 Bom[1].setStillObjects(Bom1);
                             }
-                            bomberman.setOutBomb(false);
-                            Bom[i].setPos(x, y);
-                            break;
+                            Bom[i].frameBom();
+                            handleBrickBom(i);
+
+                            if (i == 0) {
+                                Bom0 = Bom[0].getStillObjects();
+                            } else {
+                                Bom1 = Bom[1].getStillObjects();
+                            }
                         }
-                    }
-                }
 
-            }
-            //bomberman.updateLastStatus();
-
-        });
-        scene.setOnKeyReleased(keyEvent -> {
-            KeyCode keyCode = keyEvent.getCode();
-            switch (keyCode) {
-
-                case RIGHT: {
-                    if (bomberman.checkStatus("right")) {
-                        bomberman.deleteMove("right");
-                    }
-                    bomberman.updateLastStatus();
-                    break;
-                }
-                case LEFT: {
-                    if (bomberman.checkStatus("left")) {
-                        bomberman.deleteMove("left");
-                    }
-                    bomberman.updateLastStatus();
-                    break;
-                }
-                case UP: {
-                    if (bomberman.checkStatus("up")) {
-                        bomberman.deleteMove("up");
-                    }
-                    bomberman.updateLastStatus();
-                    break;
-                }
-                case DOWN: {
-                    if (bomberman.checkStatus("down")) {
-                        bomberman.deleteMove("down");
-                    }
-                    bomberman.updateLastStatus();
-                    break;
-                }
-            }
-            if (bomberman.sizeMoving() == 0) {
-                bomberman.setMoving(false);
-            }
-
-        });
-
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                for (int i = 0; i < numberBom; i++) {
-                    Bom[i].setSizeBom(SizeBom);
-                    if (Bom[i].getStatus()) {
-                        if (i == 0) {
-                            Bom[0].setStillObjects(Bom0);
-                        } else {
-                            Bom[1].setStillObjects(Bom1);
-                        }
-                        Bom[i].frameBom();
-                        handleBrickBom(i);
-
-                        if (i == 0) {
-                            Bom0 = Bom[0].getStillObjects();
-                        } else {
-                            Bom1 = Bom[1].getStillObjects();
-                        }
+                        Bom[i].updateMap(mapMatrix, Row, Col);
                     }
 
-                    Bom[i].updateMap(mapMatrix, Row, Col);
-                }
+//                    for (int i = 0; i < enemies.size(); i++) {
+//                        Enemy object = enemies.get(i);
+//                        object.updateMap(mapMatrix, Row, Col);
+//                    }
+                    if (score != new_score) {
+                        new_score = score;
+                        scoreText.setText(Integer.toString(score));
+                    }
 
-                for (int i = 0; i < enemies.size(); i++) {
-                    Enemy object = enemies.get(i);
-                    object.updateMap(mapMatrix, Row, Col);
+                    sound.soundMoving(bomberman);
+                    sound.playBackground();
+                    checkCollision();
+                    render();
+                    update();
                 }
-                if (score != new_score) {
-                    new_score = score;
-                    scoreText.setText(Integer.toString(score));
-                }
-
-                sound.soundMoving(bomberman);
-                sound.playBackground();
-                checkCollision();
-                render();
-                update();
-            }
-        };
-        timer.start();
-
-        map.addEntity_map2(stillObjects, bricks, enemies, bomberman, lifes);
+            };
+            timer.start();
+            map.addEntity_map1(stillObjects, bricks, enemies, bomberman, lifes);
+        }
     }
 
     public void pauseGame() {
         pauseScene.showPausedMenu();
         isPaused = true;
         timer.stop();
-        Sound.stopBackground();
+        Sound.pauseBackground();
     }
 
     public void resumeGame() {
@@ -283,6 +271,7 @@ public class GameplayManager {
 
     public void update() {
         enemies.forEach(Entity::update);
+        if(bomberman != null)
         bomberman.update();
         stillObjects.forEach(Entity::update);
         lifes.forEach(Entity::update);
@@ -294,8 +283,10 @@ public class GameplayManager {
         Bom0.forEach(g -> g.render(gc));
         Bom1.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
-        bomberman.render(gc);
         lifes.forEach(g -> g.render(gc));
+        if(bomberman != null) {
+            bomberman.render(gc);
+        }
     }
 
     public void handleBrickBom(int i) {
@@ -416,6 +407,60 @@ public class GameplayManager {
                 }
             }
         }
+        if(lifes.isEmpty()) {
+            clearAll();
+            uplevel();
+        }
+    }
 
+    public void clearAll() {
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        root.getChildren().removeAll(text,scoreText);
+        score = 0;
+        new_score = 0;
+        scoreText.setText("0");
+        frame_bom = -1;
+        numberBom = 1;
+        SizeBom = 1;
+        lifes.clear();
+        stillObjects.clear();
+        listFlameItem.clear();
+        deleteFlameItem.clear();
+        enemies.clear();
+        deleteEnemies.clear();
+        Bom0.clear();
+        Bom1.clear();
+        p = 0;
+        Sound.stopBackground();
+        //bomberman = null;
+    }
+    public void uplevel() {
+        if (level == 1) {
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            level++;
+            sound.playBackground();
+            mapMatrix = map.createMap(level);
+            root.getChildren().addAll(scoreText, text);
+            bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
+            map.addEntity_map2(stillObjects, bricks, enemies, bomberman, lifes);
+        }
+        else {
+            pauseGame();
+            System.out.println("u win");
+        }
+    }
+    public void addText() {
+        text.setFont(font);
+        text.setFill(Color.ORANGERED);
+        scoreText.setFont(font);
+        scoreText.setFill(Color.ORANGERED);
+        scoreText.setX(100);
+        scoreText.setY(25);
+        scoreText.setText(Integer.toString(score));
+
+        text.setX(25);
+        text.setY(25);
+        text.setText("Score: ");
+        root.getChildren().addAll(text, scoreText);
     }
 }

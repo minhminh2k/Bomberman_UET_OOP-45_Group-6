@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.GameplayManager;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.IOException;
@@ -20,9 +21,9 @@ public abstract class Entity {
     protected Image img;
 
     protected Sprite sprite;
-    public static char[][] map;
-    protected int rowMap;
-    protected int colMap;
+    public static char[][] map;// = GameplayManager.mapMatrix;
+    protected int rowMap = 14;
+    protected int colMap = 31;
 
     public void setMap() {
     }
@@ -43,6 +44,7 @@ public abstract class Entity {
         this.x = xUnit * Sprite.SCALED_SIZE;
         this.y = yUnit * Sprite.SCALED_SIZE;
         this.img = img;
+        updateMap(GameplayManager.mapMatrix, rowMap, colMap);
     }
 
     public void setEntity(int xUnit, int yUnit, Image img) {

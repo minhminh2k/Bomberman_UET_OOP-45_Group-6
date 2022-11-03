@@ -34,7 +34,12 @@ public class Oneal extends AIEnemy {
             if (move_distance >= 64) {
                 this.setMove_distance(0);
                 int new_speed = rand.nextInt(2);
-                this.setSpeed(new_speed + 1);
+                if(new_speed == 0) {
+                    this.setSpeed(new_speed + 1);
+                }
+                if(new_speed == 1) {
+                    this.setSpeed(new_speed * 4);
+                }
             }
         }
     }
@@ -99,6 +104,7 @@ public class Oneal extends AIEnemy {
             }
             x += moveHori;
             y += moveVerti;
+            move_distance = move_distance + Math.abs(moveVerti) + Math.abs(moveVerti);
         }
     }
 }
