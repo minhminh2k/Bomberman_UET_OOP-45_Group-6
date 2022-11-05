@@ -97,42 +97,42 @@ public class MapLevel {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Ballon(j, i, Sprite.balloom_left3.getFxImage());
-                        //enemies.add(objects);
+                        enemies.add(objects);
                         break;
                     }
                     case '2': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Oneal(j, i, Sprite.oneal_left1.getFxImage(), bomberman);
-                        //enemies.add(objects);
+                        enemies.add(objects);
                         break;
                     }
                     case '3': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Doll(j, i, Sprite.doll_left1.getFxImage());
-                        //enemies.add(objects);
+                        enemies.add(objects);
                         break;
                     }
                     case '4': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Ghost(j, i, Sprite.ghost_left1.getFxImage(), bomberman);
-                        //enemies.add(objects);
+                        enemies.add(objects);
                         break;
                     }
                     case '5': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Kondoria(j, i, Sprite.kondoria_left1.getFxImage(), bomberman);
-                        //enemies.add(objects);
+                        enemies.add(objects);
                         break;
                     }
                     case '6': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Minvo(j, i, Sprite.minvo_left1.getFxImage(), bomberman);
-                        //enemies.add(objects);
+                        enemies.add(objects);
                         break;
                     }
                     case 'b': {

@@ -326,7 +326,9 @@ public class GameplayManager {
         int colX = (Bom[i].getX() + 16) / 32;
         if (Bom[i].getFrame_bom() > 3 * Bom[i].getOne_frame_bom() + 1) {
             mapMatrix[rowY][colX] = 'p';
-            bomberman.checkOutBomb(Bom[i]);
+            if(bomberman != null ) {
+                bomberman.checkOutBomb(Bom[i]);
+            }
         }
         if (Bom[i].getFrame_bom() == 3 * Bom[i].getOne_frame_bom() + 1) {
             mapMatrix[rowY][colX] = ' ';
@@ -424,26 +426,32 @@ public class GameplayManager {
                         deleteEnemies.add(j);
                     }
                 }
-                if (check.checkCollisionWithBomb(Bom[i], bomberman)) {
-                    bomberman.setPos(Sprite.SCALED_SIZE, 2 * Sprite.SCALED_SIZE, true);
-                    if (lifes.size() != 0) {
-                        lifes.remove(lifes.size() - 1);
+                if(bomberman != null ) {
+                    if (check.checkCollisionWithBomb(Bom[i], bomberman)) {
+                        bomberman.setPos(Sprite.SCALED_SIZE, 2 * Sprite.SCALED_SIZE, true);
+                        if (lifes.size() != 0) {
+                            lifes.remove(lifes.size() - 1);
+                        }
                     }
                 }
+
             }
         }
         for (Brick i : listFlameItem) {
-            String s = check.checkCollisionWithFlameItem(bomberman, i);
-            if (s.length() > 0) {
-                deleteFlameItem.add(i);
+            if(bomberman != null ) {
+                String s = check.checkCollisionWithFlameItem(bomberman, i);
+                if (s.length() > 0) {
+                    deleteFlameItem.add(i);
+                }
+                if (s == "speed") {
+                    bomberman.setSpeed(bomberman.getSpeed() + 1);
+                } else if (s == "bomb") {
+                    numberBom++;
+                } else if (s == "explode") {
+                    SizeBom++;
+                }
             }
-            if (s == "speed") {
-                bomberman.setSpeed(bomberman.getSpeed() + 1);
-            } else if (s == "bomb") {
-                numberBom++;
-            } else if (s == "explode") {
-                SizeBom++;
-            }
+
         }
         for (Brick i : deleteFlameItem) {
             stillObjects.remove(i);
@@ -458,21 +466,27 @@ public class GameplayManager {
             }
         }
         for (Enemy i : enemies) {
-            if (check.checkCollisionWithEnemy(bomberman, i)) {
-                bomberman.setPos(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE * 2, true);
-                if (lifes.size() != 0) {
-                    lifes.remove(lifes.size() - 1);
+            if(bomberman != null) {
+                if (check.checkCollisionWithEnemy(bomberman, i)) {
+                    bomberman.setPos(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE * 2, true);
+                    if (lifes.size() != 0) {
+                        lifes.remove(lifes.size() - 1);
+                    }
                 }
             }
+
         }
         if (lifes.isEmpty()) {
             clearAll();
             uplevel();
         }
-        if(check.checkCollisionWithPortal(bomberman) && enemies.size() == 0) {
-            clearAll();
-            uplevel();
+        if(bomberman != null) {
+            if(check.checkCollisionWithPortal(bomberman) && enemies.size() == 0) {
+                clearAll();
+                uplevel();
+            }
         }
+
     }
 
     public void clearAll() {
