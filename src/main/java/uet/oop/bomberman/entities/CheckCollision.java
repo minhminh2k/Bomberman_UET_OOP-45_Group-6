@@ -1,5 +1,6 @@
 package uet.oop.bomberman.entities;
 
+import uet.oop.bomberman.Maps.MapLevel;
 import uet.oop.bomberman.entities.Enemies.Enemy;
 import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.Item.BomItem;
@@ -40,16 +41,16 @@ public class CheckCollision {
             int rightA, rightB;
             int topA, topB;
             int bottomA, bottomB;
-            leftA = enemy.getX() + 4;
-            rightA = leftA + 32 - 8;
+            leftA = enemy.getX();
+            rightA = leftA + 31;
             leftA /= 32;
             rightA /= 32;
-            topA = enemy.getY() + 4;
-            bottomA = topA + 32 - 8;
+            topA = enemy.getY();
+            bottomA = topA + 31;
             topA /= 32;
             bottomA /= 32;
-            leftB = bomb.getX() + 1;
-            topB = bomb.getY() + 1;
+            leftB = bomb.getX();
+            topB = bomb.getY();
             leftB /= 32;
             topB /= 32;
             if (leftA == leftB && topA >= topB - up && topA <= topB + down) {
@@ -90,60 +91,58 @@ public class CheckCollision {
         return false;
     }
 
-    public boolean checkCollisionWithBomb(BomItem bomb, Bomber bomberman) {
-        if (bomb.getFrame_bom() <= bomb.getOne_frame_bom() * 3 && !bomberman.getJustDead()) {
-            int leftA, leftB;
-            int rightA, rightB;
-            int topA, topB;
-            int bottomA, bottomB;
-            leftA = bomberman.getX() + 4;
-            rightA = leftA + 20;
-            leftA /= 32;
-            rightA /= 32;
-            topA = bomberman.getY() + 4;
-            bottomA = topA + 32 - 8;
-            topA /= 32;
-            bottomA /= 32;
-            leftB = bomb.getX() + 4;
-            topB = bomb.getY() + 4;
-            leftB /= 32;
+    public boolean checkCollisionWithBomb(BomItem bomb, Bomber bomberman) {	
+        if (bomb.getFrame_bom() <= bomb.getOne_frame_bom() * 3 && !bomberman.getJustDead()) {	
+            int leftA, leftB;	
+            int rightA, rightB;	
+            int topA, topB;	
+            int bottomA, bottomB;	
+            leftA = bomberman.getX();	
+            rightA = leftA + 24;	
+            leftA /= 32;	
+            rightA /= 32;	
+            topA = bomberman.getY();	
+            bottomA = topA + 32 - 2;
+            topA /= 32;	
+            bottomA /= 32;	
+            leftB = bomb.getX() ;	
+            topB = bomb.getY() ;	
+            leftB /= 32;	
             topB /= 32;
-            if (leftA == leftB && topA >= topB - bomb.getDistanceUp() && topA <= topB + bomb.getDistanceDown()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-            if (leftA == leftB && bottomA >= topB - bomb.getDistanceUp() && bottomA <= topB + bomb.getDistanceDown()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-            if (rightA == leftB && topA >= topB - bomb.getDistanceUp() && topA <= topB + bomb.getDistanceDown()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-            if (rightA == leftB && bottomA >= topB - bomb.getDistanceUp() && bottomA <= topB + bomb.getDistanceDown()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-            if (topA == topB && leftA >= leftB - bomb.getDistanceLeft() && leftA <= leftB + bomb.getDistanceRight()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-            if (bottomA == topB && leftA >= leftB - bomb.getDistanceLeft() && leftA <= leftB + bomb.getDistanceRight()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-            if (topA == topB && rightA >= leftB - bomb.getDistanceLeft() && rightA <= leftB + bomb.getDistanceRight()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-            if (bottomA == topB && rightA >= leftB - bomb.getDistanceLeft() && rightA <= leftB + bomb.getDistanceRight()) {
-                Sound.playSound(Sound.playerDead);
-                return true;
-            }
-
-        }
-
-        return false;
+            if (leftA == leftB && topA >= topB - bomb.getExplodeUp() && topA <= topB + bomb.getExplodeDown()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+            if (leftA == leftB && bottomA >= topB - bomb.getExplodeUp() && bottomA <= topB + bomb.getExplodeDown()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+            if (rightA == leftB && topA >= topB - bomb.getExplodeUp() && topA <= topB + bomb.getExplodeDown()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+            if (rightA == leftB && bottomA >= topB - bomb.getExplodeUp() && bottomA <= topB + bomb.getExplodeDown()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+            if (topA == topB && leftA >= leftB - bomb.getExplodeLeft() && leftA <= leftB + bomb.getExplodeRight()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+            if (bottomA == topB && leftA >= leftB - bomb.getExplodeLeft() && leftA <= leftB + bomb.getExplodeRight()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+            if (topA == topB && rightA >= leftB - bomb.getExplodeLeft() && rightA <= leftB + bomb.getExplodeRight()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+            if (bottomA == topB && rightA >= leftB - bomb.getExplodeLeft() && rightA <= leftB + bomb.getExplodeRight()) {	
+                Sound.playSound(Sound.playerDead);	
+                return true;	
+            }	
+        }	
+        return false;	
     }
 
     public String checkCollisionWithFlameItem(Bomber bomberman, Brick flameItem) {
@@ -176,5 +175,29 @@ public class CheckCollision {
             return "yes";
         }
         return "";
+    }
+    public boolean checkCollisionWithPortal(Bomber bomberman) {
+        int leftA, leftB;
+        int rightA, rightB;
+        int topA, topB;
+        int bottomA, bottomB;
+        leftA = bomberman.getX();
+        rightA = leftA + 24;
+        topA = bomberman.getY();
+        bottomA = topA + 31;
+        int center_x = leftA + 12;
+        int center_y = topA + 16;
+        leftB = MapLevel.End_x;
+        rightB = leftB + 32;
+        topB = MapLevel.End_y;
+        bottomB = topB + 32;
+        if ((bottomB >= topA && rightB >= leftA && rightB - 32 <= leftA && bottomB - 32 <= topA)
+                || (bottomB >= topA && rightA >= leftB && rightA - 24 <= leftB && bottomB - 32 <= topA)
+                || (bottomA >= topB && rightB >= leftA && rightB - 32 <= leftA && bottomA - 32 <= topB)
+                || (bottomA >= topB && rightA >= leftB && rightA - 24 <= leftB && bottomA - 32 <= topB)) {
+            System.out.println("da qua man");
+            return true;
+        }
+        return false;
     }
 }

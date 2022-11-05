@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapLevel {
+    public static int End_x;
+    public static int End_y;
     private static final int HEIGHT = 14;
     private static final int WIDTH = 31;
     private char[][] mapMatrix = new char[HEIGHT][WIDTH];
@@ -59,10 +61,12 @@ public class MapLevel {
                     case 'x': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
-                        Entity objects = new Grass(j, i, Sprite.portal.getFxImage());
-                        stillObjects.add(objects);
-//                        bricks[i][j] = new Brick(j, i, Sprite.brick_map2.getFxImage());
-//                        stillObjects.add(bricks[i][j]);
+                        bricks[i][j] = new Brick(j, i, Sprite.brick.getFxImage());
+                        bricks[i][j].setFlameItem(Sprite.portal.getFxImage());
+                        bricks[i][j].setPower("end");
+                        stillObjects.add(bricks[i][j]);
+                        End_x = j*32;
+                        End_y = i*32;
                         break;
                     }
                     case 'o': {
@@ -93,42 +97,42 @@ public class MapLevel {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Ballon(j, i, Sprite.balloom_left3.getFxImage());
-                        enemies.add(objects);
+                        //enemies.add(objects);
                         break;
                     }
                     case '2': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Oneal(j, i, Sprite.oneal_left1.getFxImage(), bomberman);
-                        enemies.add(objects);
+                        //enemies.add(objects);
                         break;
                     }
                     case '3': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Doll(j, i, Sprite.doll_left1.getFxImage());
-                        enemies.add(objects);
+                        //enemies.add(objects);
                         break;
                     }
                     case '4': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Ghost(j, i, Sprite.ghost_left1.getFxImage(), bomberman);
-                        enemies.add(objects);
+                        //enemies.add(objects);
                         break;
                     }
                     case '5': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Kondoria(j, i, Sprite.kondoria_left1.getFxImage(), bomberman);
-                        enemies.add(objects);
+                        //enemies.add(objects);
                         break;
                     }
                     case '6': {
                         Entity object = new Grass(j, i, Sprite.grass.getFxImage());
                         stillObjects.add(object);
                         Enemy objects = new Minvo(j, i, Sprite.minvo_left1.getFxImage(), bomberman);
-                        enemies.add(objects);
+                        //enemies.add(objects);
                         break;
                     }
                     case 'b': {
@@ -177,10 +181,12 @@ public class MapLevel {
                     case 'x': {
                         Entity object = new Grass(j, i, Sprite.grass_map2.getFxImage());
                         stillObjects.add(object);
-                        Entity objects = new Grass(j, i, Sprite.portal.getFxImage());
-                        stillObjects.add(objects);
-//                        bricks[i][j] = new Brick(j, i, Sprite.brick_map2.getFxImage());
-//                        stillObjects.add(bricks[i][j]);
+                        bricks[i][j] = new Brick(j, i, Sprite.brick_map2.getFxImage());
+                        bricks[i][j].setFlameItem(Sprite.portal.getFxImage());
+                        bricks[i][j].setPower("end");
+                        stillObjects.add(bricks[i][j]);
+                        End_x = j*32;
+                        End_y = i*32;
                         break;
                     }
                     case 'o': {

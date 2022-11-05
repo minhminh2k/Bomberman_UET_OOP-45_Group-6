@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.GameplayManager;
 import uet.oop.bomberman.entities.Item.BomItem;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -386,7 +387,7 @@ public class Bomber extends Entity {
 
     boolean canMove(int i, int j) {
         if (map[i][j] == ' ' || ( map[i][j] == 'p' && !outBomb) || map[i][j] == '1' || map[i][j] == '2' || map[i][j] == '3'
-                || map[i][j] == '4' || map[i][j] == '5' || map[i][j] == '6' || map[i][j] == 'x') {
+                || map[i][j] == '4' || map[i][j] == '5' || map[i][j] == '6' || map[i][j] == 'y') {
             return true;
         }
         return false;

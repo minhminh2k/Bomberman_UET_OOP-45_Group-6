@@ -79,7 +79,7 @@ public class Sound {
         if(bomberman != null) {
             if (bomberman.isMoving()) {
                 //System.out.println("da chay");
-                walk.setVolume(0.8);
+                walk.setVolume(0.4);
                 walk.setOnEndOfMedia(new Runnable() {
                     @Override
                     public void run() {

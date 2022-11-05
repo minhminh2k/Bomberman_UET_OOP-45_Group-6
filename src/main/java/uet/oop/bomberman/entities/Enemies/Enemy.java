@@ -88,16 +88,16 @@ public abstract class Enemy extends Entity {
             int y_pos = this.getY() / 32;
             canMoveL = map[y_pos][x_pos - 1] == ' ' || map[y_pos][x_pos - 1] == '1' || map[y_pos][x_pos - 1] == '2'
                     || map[y_pos][x_pos - 1] == '3' || map[y_pos][x_pos - 1] == '4' || map[y_pos][x_pos - 1] == '5'
-                    || map[y_pos][x_pos - 1] == '6' || map[y_pos][x_pos - 1] == 'x';
+                    || map[y_pos][x_pos - 1] == '6' || map[y_pos][x_pos - 1] == 'y';
             canMoveR = map[y_pos][x_pos + 1] == ' ' || map[y_pos][x_pos + 1] == '1' || map[y_pos][x_pos + 1] == '2'
                     || map[y_pos][x_pos + 1] == '3' || map[y_pos][x_pos + 1] == '4' || map[y_pos][x_pos + 1] == '5'
-                    || map[y_pos][x_pos + 1] == '6' || map[y_pos][x_pos + 1] == 'x';
+                    || map[y_pos][x_pos + 1] == '6' || map[y_pos][x_pos + 1] == 'y';
             canMoveU = map[y_pos - 1][x_pos] == ' ' || map[y_pos - 1][x_pos] == '1' || map[y_pos - 1][x_pos] == '2'
                     || map[y_pos - 1][x_pos] == '3' || map[y_pos - 1][x_pos] == '4' || map[y_pos - 1][x_pos] == '5'
-                    || map[y_pos - 1][x_pos] == '6' || map[y_pos - 1][x_pos] == 'x';
+                    || map[y_pos - 1][x_pos] == '6' || map[y_pos - 1][x_pos] == 'y';
             canMoveD = map[y_pos + 1][x_pos] == ' ' || map[y_pos + 1][x_pos] == '1' || map[y_pos + 1][x_pos] == '2'
                     || map[y_pos + 1][x_pos] == '3' || map[y_pos + 1][x_pos] == '4' || map[y_pos + 1][x_pos] == '5'
-                    || map[y_pos + 1][x_pos] == '6' || map[y_pos + 1][x_pos] == 'x';
+                    || map[y_pos + 1][x_pos] == '6' || map[y_pos + 1][x_pos] == 'y';
         }
     }
 

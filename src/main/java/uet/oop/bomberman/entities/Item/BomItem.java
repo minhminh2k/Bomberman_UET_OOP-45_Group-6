@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.Sound.Sound;
+import uet.oop.bomberman.BombermanGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +17,17 @@ public class BomItem extends Entity {
     public static int ColX;
     public static final int one_frame_bom = 20;
     public int frame_bom = -1;
-    public int SizeBom = 1;
+    public int SizeBom = 2;
     public boolean[] checkbomb = new boolean[9];
 
     public int distanceRight = 0;
     public int distanceLeft = 0;
     public int distanceUp = 0;
     public int distanceDown = 0;
+    public int explodeRight = 0;
+    public int explodeLeft = 0;
+    public int explodeUp = 0;
+    public int explodeDown = 0;
     private List<Entity> stillObjects = new ArrayList<>();
 
     public List<Entity> getStillObjects() {
@@ -71,6 +76,7 @@ public class BomItem extends Entity {
                     bomb[1].setEntity(col + 1, row, Sprite.explosion_horizontal_right_last.getFxImage());
                     checkbomb[1] = true;
                     stillObjects.add(bomb[1]);
+                    explodeRight = 1;
                 }
             }
             if (row + 1 <= HEIGHT) {
@@ -78,6 +84,7 @@ public class BomItem extends Entity {
                     bomb[7].setEntity(col, row + 1, Sprite.explosion_vertical_down_last.getFxImage());
                     checkbomb[7] = true;
                     stillObjects.add(bomb[7]);
+                    explodeDown = 1;
                 }
             }
             if (col - 1 >= 0) {
@@ -85,6 +92,7 @@ public class BomItem extends Entity {
                     bomb[3].setEntity(col - 1, row, Sprite.explosion_horizontal_left_last.getFxImage());
                     checkbomb[3] = true;
                     stillObjects.add(bomb[3]);
+                    explodeLeft = 1;
                 }
             }
             if (row - 1 >= 0) {
@@ -92,6 +100,7 @@ public class BomItem extends Entity {
                     bomb[5].setEntity(col, row - 1, Sprite.explosion_vertical_top_last.getFxImage());
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
+                    explodeUp = 1;
                 }
             }
         } else if (SizeBom == 2) {
@@ -103,12 +112,14 @@ public class BomItem extends Entity {
                     checkbomb[1] = true;
                     stillObjects.add(bomb[2]);
                     stillObjects.add(bomb[1]);
+                    explodeRight = 2;
                 } else if (canPass(row, col + 1) && !canPass(row, col + 2)) {
                     bomb[1].setEntity(col + 1, row, Sprite.explosion_horizontal_right_last.getFxImage());
                     checkbomb[1] = true;
                     stillObjects.add(bomb[1]);
+                    explodeRight = 1;
                 }
-            } else if (col + 2 == WIDTH) {
+            } else if (col + 2 >= WIDTH) {
             }
             if (row + 2 < HEIGHT) {
                 if (canPass(row + 2, col) && canPass(row + 1, col)) {
@@ -118,10 +129,12 @@ public class BomItem extends Entity {
                     checkbomb[7] = true;
                     stillObjects.add(bomb[8]);
                     stillObjects.add(bomb[7]);
+                    explodeDown = 2;
                 } else if (canPass(row + 1, col) && !canPass(row + 2, col)) {
                     bomb[7].setEntity(col, row + 1, Sprite.explosion_vertical_down_last.getFxImage());
                     checkbomb[7] = true;
                     stillObjects.add(bomb[7]);
+                    explodeDown = 1;
                 }
             } else {
 
@@ -134,16 +147,19 @@ public class BomItem extends Entity {
                     checkbomb[4] = true;
                     stillObjects.add(bomb[3]);
                     stillObjects.add(bomb[4]);
+                    explodeLeft = 2;
                 } else if (canPass(row, col - 1) && !canPass(row, col - 2)) {
                     bomb[3].setEntity(col - 1, row, Sprite.explosion_horizontal_left_last.getFxImage());
                     checkbomb[3] = true;
                     stillObjects.add(bomb[3]);
+                    explodeLeft = 1;
                 }
             } else if (col == 2) {
                 if (canPass(row, col - 1)) {
                     bomb[3].setEntity(col - 1, row, Sprite.explosion_horizontal_left_last.getFxImage());
                     checkbomb[3] = true;
                     stillObjects.add(bomb[3]);
+                    explodeLeft = 1;
                 }
             }
             if (row - 2 > 0) {
@@ -154,16 +170,19 @@ public class BomItem extends Entity {
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
                     stillObjects.add(bomb[6]);
+                    explodeDown = 2;
                 } else if (canPass(row - 1, col) && !canPass(row - 2, col)) {
                     bomb[5].setEntity(col, row - 1, Sprite.explosion_vertical_top_last.getFxImage());
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
+                    explodeDown = 1;
                 }
             } else if (row == 2) {
                 if (canPass(row - 1, col)) {
                     bomb[5].setEntity(col, row - 1, Sprite.explosion_vertical_top_last.getFxImage());
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
+                    explodeDown = 1;
                 }
             }
         }
@@ -209,7 +228,7 @@ public class BomItem extends Entity {
                 if (canPass(row + 2, col) && canPass(row + 1, col)) {
                     bomb[8].setImg(Sprite.explosion_vertical_down_last1.getFxImage());
                     bomb[7].setImg(Sprite.explosion_vertical1.getFxImage());
-                } else if (!canPass(row, col + 2) && canPass(row, col + 1)) {
+                } else if (!canPass(row+2, col) && canPass(row+1, col)) {
                     bomb[7].setImg(Sprite.explosion_vertical_down_last1.getFxImage());
                 }
             } else {
@@ -375,7 +394,7 @@ public class BomItem extends Entity {
     }
 
     public int checkRight() {
-        if (SizeBom == 2 && ColX + 2 < WIDTH && canExplode(RowY, ColX + 2) && map[RowY][ColX + 1] == ' ') {
+        if (SizeBom == 2 && ColX + 2 < WIDTH && canExplode(RowY, ColX + 2) && canPass(RowY, ColX+1)) {
             return 2;
         }
         if (canExplode(RowY, ColX + 1)) {
@@ -386,7 +405,7 @@ public class BomItem extends Entity {
 
     public int checkLeft() {
 
-        if (SizeBom == 2 && ColX - 2 > 0 && canExplode(RowY, ColX - 1) && map[RowY][ColX - 1] == ' ') {
+        if (SizeBom == 2 && ColX - 2 > 0 && canExplode(RowY, ColX - 2) && canPass(RowY, ColX-1)) {
             return 2;
         }
         if (canExplode(RowY, ColX - 1)) {
@@ -396,7 +415,7 @@ public class BomItem extends Entity {
     }
 
     public int checkDown() {
-        if (SizeBom == 2 && RowY + 2 < HEIGHT && canExplode(RowY + 2, ColX) && map[RowY + 1][ColX] == ' ') {
+        if (SizeBom == 2 && RowY + 2 < HEIGHT && canExplode(RowY + 2, ColX) && canPass(RowY+1,ColX)) {
             //brickDown = true;
             return 2;
         }
@@ -408,7 +427,7 @@ public class BomItem extends Entity {
     }
 
     public int checkUp() {
-        if (SizeBom == 2 && RowY - 2 > 0 && (canExplode(RowY - 2, ColX)) && map[RowY - 1][ColX] == ' ') {
+        if (SizeBom == 2 && RowY - 2 > 0 && (canExplode(RowY - 2, ColX)) && canPass(RowY -1, ColX)) {
             //brickUp = true;
             return 2;
         }
@@ -453,9 +472,7 @@ public class BomItem extends Entity {
     }
 
     public boolean canExplode(int i, int j) {
-        if (map[i][j] == ' ' || map[i][j] == 's' || map[i][j] == 'b' || map[i][j] == 'e' || map[i][j] == '*'
-                || map[i][j] == 'p' || map[i][j] == '1' || map[i][j] == '2' || map[i][j] == '3'
-                || map[i][j] == '4' || map[i][j] == '5' || map[i][j] == '6') {
+        if (map[i][j] == 'x' || map[i][j] == 's' || map[i][j] == 'b' || map[i][j] == 'e' || map[i][j] == '*') {
             return true;
         }
         return false;
@@ -463,10 +480,22 @@ public class BomItem extends Entity {
 
     public boolean canPass(int i, int j) {
         if (map[i][j] == ' ' || map[i][j] == 'p' || map[i][j] == '1' || map[i][j] == '2' || map[i][j] == '3'
-                || map[i][j] == '4' || map[i][j] == '5' || map[i][j] == '6') {
+                || map[i][j] == '4' || map[i][j] == '5' || map[i][j] == '6' || map[i][j] == 'y') {
             return true;
         }
         return false;
+    }
+    public int getExplodeRight() {
+        return explodeRight;
+    }
+    public int getExplodeLeft() {
+        return explodeLeft;
+    }
+    public int getExplodeUp() {
+        return explodeUp;
+    }
+    public int getExplodeDown() {
+        return explodeDown;
     }
 
 }
