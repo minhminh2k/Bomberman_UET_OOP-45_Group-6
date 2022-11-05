@@ -6,6 +6,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
+import uet.oop.bomberman.Sound.Sound;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -58,6 +59,7 @@ public abstract class MyButton extends Button {
         setStyle(BUTTON_PRESSED);
         setPrefHeight(BUTTON_HEIGHT - 4);
         setLayoutY(getLayoutY() + 4);
+        Sound.playSound(Sound.buttonTouch);
     }
 
     private void setButtonReleased() {

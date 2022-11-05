@@ -21,6 +21,11 @@ public class Sound {
     public static String setBomb = "res/SFX/setBomb.wav";
     public static String footStep1 = "res/SFX/Footstep 1.wav";
     public static String EndGame = "res/Music/songs/Endgame.mp3";
+
+    public static String winGame = "res/SFX/win.wav";
+    public static String loseGame = "res/SFX/lose.wav";
+    public static String changeMap = "res/SFX/changemap.wav";
+    public static String buttonTouch = "res/SFX/button.wav";
     public static MediaPlayer soundBackground = new MediaPlayer(
             new Media(new File("res/Music/game/game2.mp3").toURI().toString()));
 
@@ -62,7 +67,7 @@ public class Sound {
 
     public void playBackground() {
         if(playing) {
-            soundBackground.setVolume(0.2);
+            soundBackground.setVolume(0.1);
             soundBackground.setOnEndOfMedia(new Runnable() {
                 public void run() {
                     soundBackground.seek(Duration.ZERO);
@@ -91,6 +96,7 @@ public class Sound {
                 walk.pause();
             }
         }
+        else walk.stop();
     }
 
 

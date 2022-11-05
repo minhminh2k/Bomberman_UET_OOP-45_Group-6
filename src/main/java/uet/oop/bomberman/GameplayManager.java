@@ -515,6 +515,7 @@ public class GameplayManager {
     public void uplevel() {
         if (level == 1) {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            Sound.playSound(Sound.changeMap);
             level++;
             sound.playBackground();
             mapMatrix = map.createMap(level);
@@ -522,6 +523,7 @@ public class GameplayManager {
             bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
             map.addEntity_map2(stillObjects, bricks, enemies, bomberman, lifes);
         } else {
+            Sound.playSound(Sound.winGame);
             pauseGame();
             System.out.println("u win");
         }
