@@ -1,11 +1,11 @@
-package uet.oop.bomberman.entities.MainMenu;
+package uet.oop.bomberman.Menu.Buttons;
 
-public class HelpButton extends MyButton {
+public class RectHelpButton extends RectButton {
     private String lable = "HELP";
     private double xPos = 160;
     private double yPos = 310;
 
-    public HelpButton() {
+    public RectHelpButton() {
         super();
         setText(lable);
         this.setLayoutX(xPos);

@@ -195,7 +195,6 @@ public class CheckCollision {
                 || (bottomB >= topA && rightA >= leftB && rightA - 24 <= leftB && bottomB - 32 <= topA)
                 || (bottomA >= topB && rightB >= leftA && rightB - 32 <= leftA && bottomA - 32 <= topB)
                 || (bottomA >= topB && rightA >= leftB && rightA - 24 <= leftB && bottomA - 32 <= topB)) {
-            System.out.println("da qua man");
             return true;
         }
         return false;

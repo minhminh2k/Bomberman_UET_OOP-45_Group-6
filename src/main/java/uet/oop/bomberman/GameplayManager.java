@@ -1,100 +1,154 @@
 package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import uet.oop.bomberman.Maps.MapLevel;
+import uet.oop.bomberman.Menu.Buttons.CirclePauseButton;
+import uet.oop.bomberman.Menu.Managers.GameOverSubsceneManager;
+import uet.oop.bomberman.Menu.Managers.PauseSubsceneManager;
 import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Enemies.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.Item.BomItem;
-import uet.oop.bomberman.entities.Item.FlameItem;
 import uet.oop.bomberman.entities.TitleMap.Brick;
-import uet.oop.bomberman.entities.TitleMap.Grass;
-import uet.oop.bomberman.entities.TitleMap.Wall;
-import uet.oop.bomberman.entities.MainMenu.*;
 
-import java.io.*;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameplayManager {
-    public int level = 1;
+    //APPLICATION
     private GraphicsContext gc;
     private Canvas canvas;
     private Scene scene;
     private Group root;
     private Stage stage;
 
-    private PauseSubsceneManager pauseScene = new PauseSubsceneManager();
+    //SUBSCENE
+    private PauseSubsceneManager pauseScene;
+    private GameOverSubsceneManager gameOverScene;
+    private CirclePauseButton circlePauseButton;
     private boolean isPaused = false;
 
+    //IN GAME ENTITIES AND LOGIC VARIABLES
+    public int level = 1;
     private AnimationTimer timer;
-    private MapLevel map = new MapLevel();
-    private Text scoreText = new Text();
-    Text text = new Text();
+    private final MapLevel map = new MapLevel();
     private int score = 0;
     private int new_score = 0;
-    private Font font = Font.loadFont("file:res/BreathFire.ttf", 25);
-    public Sound sound = new Sound();
     public static final int WIDTH = 31;
     public static final int HEIGHT = 14;
     public int frame_bom = -1;
     public int numberBom = 1;
     public int SizeBom = 1;
-
     public static char[][] mapMatrix = new char[HEIGHT][WIDTH];
     public int Row = HEIGHT;
     public int Col = WIDTH;
-    private List<Entity> lifes = new ArrayList<>();
-    private List<Entity> stillObjects = new ArrayList<>();
-    private List<Brick> listFlameItem = new ArrayList<>();
-    private List<Brick> deleteFlameItem = new ArrayList<>();
-    private List<Enemy> enemies = new ArrayList<>();
-    private List<Enemy> deleteEnemies = new ArrayList<>();
+    private final List<Entity> lives = new ArrayList<>();
+    private final List<Entity> stillObjects = new ArrayList<>();
+    private final List<Brick> listFlameItem = new ArrayList<>();
+    private final List<Brick> deleteFlameItem = new ArrayList<>();
+    private final List<Enemy> enemies = new ArrayList<>();
+    private final List<Enemy> deleteEnemies = new ArrayList<>();
     private List<Entity> Bom0 = new ArrayList<>();
     private List<Entity> Bom1 = new ArrayList<>();
     CheckCollision check = new CheckCollision();
     BomItem[] Bom = new BomItem[3];
-
-    public Brick[][] bricks = new Brick[HEIGHT][WIDTH];
-    public int p = 0;
+    private final Brick[][] bricks = new Brick[HEIGHT][WIDTH];
     Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
 
-    public void startGame(Stage menuStage) {
+    //TEXT
+    private final Font font = Font.loadFont("file:res/BreathFire.ttf", 25);
+    private final Text scoreText = new Text();
+    private final Text text = new Text();
 
-        //Hiding the menuStage
-        menuStage.hide();
+    //SOUND
+    private final Sound sound = new Sound();
+    private boolean isMuted;
 
-        //Initializing and handling Stage/Scenes
+    /**
+     * This function initializes the application structure.
+     */
+    public void init() {
+        gameOverScene = new GameOverSubsceneManager();
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
+        pauseScene = new PauseSubsceneManager();
         stage = new Stage();
         root = new Group();
+        circlePauseButton = new CirclePauseButton();
         root.getChildren().add(canvas);
-        root.getChildren().add(pauseScene);
+        root.getChildren().add(gameOverScene);
+        canvas.setMouseTransparent(true);
         scene = new Scene(root);
         stage.setTitle("Bomberman");
         stage.setScene(scene);
         stage.show();
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                for (int i = 0; i < numberBom; i++) {
+                    Bom[i].setSizeBom(SizeBom);
+                    if (Bom[i].getStatus()) {
+                        if (i == 0) {
+                            Bom[0].setStillObjects(Bom0);
+                        } else {
+                            Bom[1].setStillObjects(Bom1);
+                        }
+                        Bom[i].frameBom();
+                        handleBrickBom(i);
 
+                        if (i == 0) {
+                            Bom0 = Bom[0].getStillObjects();
+                        } else {
+                            Bom1 = Bom[1].getStillObjects();
+                        }
+                    }
+
+                    Bom[i].updateMap(mapMatrix, Row, Col);
+                }
+
+                if (score != new_score) {
+                    new_score = score;
+                    scoreText.setText(Integer.toString(score));
+                }
+
+                sound.soundMoving(bomberman);
+                sound.playBackground();
+                checkCollision();
+                render();
+                update();
+            }
+        };
+        isMuted = false;
+        sound.unmute();
+        timer.start();
         addText();
+    }
 
+    /**
+     * This function starts the game.
+     */
+    public void startGame(Stage menuStage) {
+        isPaused = false;
+        menuStage.hide();
+        if (root != null && root.getChildren() != null) {
+            clearAll();
+        }
+
+        init();
         mapMatrix = map.createMap(level);
-
-        //bomberman.updateMap(mapMatrix, Row, Col);
+        bomberman.setPos(32,32 * 2);
         for (int i = 0; i < 3; i++) {
             Bom[i] = new BomItem() {
                 @Override
@@ -111,21 +165,110 @@ public class GameplayManager {
                 };
             }
         }
+        keyEventHandling(scene);
+        pauseSubSceneEventHandling(menuStage);
+        gameOverSubSceneEventHandling(menuStage);
+        map.addEntity_map1(stillObjects, bricks, enemies, bomberman, lives);
+    }
+
+    /**
+     * This function handles the game over subscene.
+     */
+    private void gameOverSubSceneEventHandling(Stage menuStage) {
+        EventHandler<MouseEvent> newGame = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                clearAll();
+                startGame(menuStage);
+            }
+        };
+
+        EventHandler<MouseEvent> returnMain = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                clearAll();
+                returnMainMenu(stage, menuStage);
+            }
+        };
+
+        EventHandler<MouseEvent> exit = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                stage.close();
+            }
+        };
+        gameOverScene.getReturnMainMenuButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, returnMain);
+        gameOverScene.getNewGameButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, newGame);
+        gameOverScene.getExitButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, exit);
+    }
+
+    /**
+     * This function handles the pause subscene.
+     */
+    private void pauseSubSceneEventHandling(Stage menuStage) {
+        EventHandler<MouseEvent> resume = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                if (isPaused && bomberman != null) {
+                    resumeGame();
+                }
+            }
+        };
+
+        EventHandler<MouseEvent> muteSound = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                if (sound.isMuted()) {
+                    pauseScene.getSoundButton().setUNMUTED();
+                    sound.unmute();
+                } else {
+                    pauseScene.getSoundButton().setMUTED();
+                    sound.mute();
+                }
+            }
+        };
+
+        EventHandler<MouseEvent> returnMain = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                returnMainMenu(stage, menuStage);
+            }
+        };
+
+        EventHandler<MouseEvent> pause = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                pauseGame();
+            }
+        };
+
+        EventHandler<MouseEvent> exit = new EventHandler<javafx.scene.input.MouseEvent>() {
+            @Override
+            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
+                stage.close();
+            }
+        };
+
+        circlePauseButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, pause);
+        pauseScene.getReturnMainMenuButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, returnMain);
+        pauseScene.getResumeButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, resume);
+        pauseScene.getSoundButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, muteSound);
+        pauseScene.getExitButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, exit);
+    }
+
+    /**
+     * This function handles the in-game pressed keys.
+     */
+    private void keyEventHandling(Scene scene){
         scene.setOnKeyPressed(keyEvent -> {
             KeyCode keyCode = keyEvent.getCode();
 
             switch (keyCode) {
-                case BACK_SPACE: {
-                    if (bomberman != null) {
-                        if (!isPaused) {
-                            pauseGame();
-                            break;
-                        } else {
-                            resumeGame();
-                            break;
-                        }
+                case ESCAPE: {
+                    if (bomberman != null && !isPaused) {
+                        pauseGame();
                     }
-
+                    break;
                 }
                 case RIGHT: {
                     if (bomberman != null) {
@@ -186,52 +329,42 @@ public class GameplayManager {
                 }
 
             }
-            //bomberman.updateLastStatus();
 
         });
         scene.setOnKeyReleased(keyEvent -> {
             KeyCode keyCode = keyEvent.getCode();
             switch (keyCode) {
-
-                case RIGHT: {
+                case RIGHT -> {
                     if (bomberman != null) {
                         if (bomberman.checkStatus("right")) {
                             bomberman.deleteMove("right");
                         }
                         bomberman.updateLastStatus();
                     }
-
-                    break;
                 }
-                case LEFT: {
+                case LEFT -> {
                     if (bomberman != null) {
                         if (bomberman.checkStatus("left")) {
                             bomberman.deleteMove("left");
                         }
                         bomberman.updateLastStatus();
                     }
-
-                    break;
                 }
-                case UP: {
+                case UP -> {
                     if (bomberman != null) {
                         if (bomberman.checkStatus("up")) {
                             bomberman.deleteMove("up");
                         }
                         bomberman.updateLastStatus();
                     }
-
-                    break;
                 }
-                case DOWN: {
+                case DOWN -> {
                     if (bomberman != null) {
                         if (bomberman.checkStatus("down")) {
                             bomberman.deleteMove("down");
                         }
                         bomberman.updateLastStatus();
                     }
-
-                    break;
                 }
             }
             if (bomberman != null) {
@@ -240,87 +373,73 @@ public class GameplayManager {
                 }
             }
 
-
         });
-
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                for (int i = 0; i < numberBom; i++) {
-                    Bom[i].setSizeBom(SizeBom);
-                    if (Bom[i].getStatus()) {
-                        if (i == 0) {
-                            Bom[0].setStillObjects(Bom0);
-                        } else {
-                            Bom[1].setStillObjects(Bom1);
-                        }
-                        Bom[i].frameBom();
-                        handleBrickBom(i);
-
-                        if (i == 0) {
-                            Bom0 = Bom[0].getStillObjects();
-                        } else {
-                            Bom1 = Bom[1].getStillObjects();
-                        }
-                    }
-
-                    Bom[i].updateMap(mapMatrix, Row, Col);
-                }
-
-//                    for (int i = 0; i < enemies.size(); i++) {
-//                        Enemy object = enemies.get(i);
-//                        object.updateMap(mapMatrix, Row, Col);
-//                    }
-                if (score != new_score) {
-                    new_score = score;
-                    scoreText.setText(Integer.toString(score));
-                }
-
-                sound.soundMoving(bomberman);
-                sound.playBackground();
-                checkCollision();
-                render();
-                update();
-            }
-        };
-        timer.start();
-        map.addEntity_map1(stillObjects, bricks, enemies, bomberman, lifes);
     }
 
+    /**
+     * This function shows the main menu stage.
+     */
+    public void returnMainMenu(Stage gameStage, Stage menuStage) {
+        gameStage.hide();
+        menuStage.show();
+        timer.stop();
+        Sound.stopBackground();
+        pauseScene.hideSubscene();
+    }
+
+    /**
+     * This function pauses the game.
+     */
     public void pauseGame() {
-        pauseScene.showPausedMenu();
+        root.getChildren().add(pauseScene);
+        pauseScene.showSubscene();
         isPaused = true;
         timer.stop();
         Sound.pauseBackground();
     }
 
+    /**
+     * This function continues the game.
+     */
     public void resumeGame() {
-        pauseScene.hidePausedMenu();
+        root.getChildren().remove(pauseScene);
+        pauseScene.hideSubscene();
         isPaused = false;
         timer.start();
-        sound.playBackground();
+        if (!isMuted){
+            sound.playBackground();
+        }
     }
 
+    /**
+     * This function updates in-game entities.
+     */
     public void update() {
         enemies.forEach(Entity::update);
         if (bomberman != null)
             bomberman.update();
         stillObjects.forEach(Entity::update);
-        lifes.forEach(Entity::update);
+        lives.forEach(Entity::update);
     }
 
+    /**
+     * This function renders in-game entities.
+     */
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
         Bom0.forEach(g -> g.render(gc));
         Bom1.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
-        lifes.forEach(g -> g.render(gc));
+        lives.forEach(g -> g.render(gc));
         if (bomberman != null) {
             bomberman.render(gc);
         }
     }
 
+    /**
+     * This function handles when bricks are exploded.
+     */
     public void handleBrickBom(int i) {
         int rowY = (Bom[i].getY() + 16) / 32;
         int colX = (Bom[i].getX() + 16) / 32;
@@ -415,26 +534,28 @@ public class GameplayManager {
         }
     }
 
+    /**
+     * This function handles entities' collision.
+     */
     public void checkCollision() {
         for (int i = 0; i < numberBom; i++) {
             if (Bom[i].getStatus()) {
                 for (Enemy j : enemies) {
-                    if (check.checkCollisionWithBomb(Bom[i], j, Bom[i].getExplodeRight(), Bom[i].getExplodeLeft(),
-                            Bom[i].getExplodeUp(), Bom[i].getExplodeDown()) && !j.isAdd_to_remove()) {
-                        score += 200;
-                        j.setAdd_to_remove(true);
-                        deleteEnemies.add(j);
-                    }
-                }
-                if(bomberman != null ) {
-                    if (check.checkCollisionWithBomb(Bom[i], bomberman)) {
-                        bomberman.setPos(Sprite.SCALED_SIZE, 2 * Sprite.SCALED_SIZE, true);
-                        if (lifes.size() != 0) {
-                            lifes.remove(lifes.size() - 1);
+                    if (bomberman != null) {
+                        if (check.checkCollisionWithBomb(Bom[i], j, Bom[i].getExplodeRight(), Bom[i].getExplodeLeft(),
+                                Bom[i].getExplodeUp(), Bom[i].getExplodeDown()) && !j.isAdd_to_remove()) {
+                            score += 200;
+                            j.setAdd_to_remove(true);
+                            deleteEnemies.add(j);
                         }
                     }
                 }
-
+                if (check.checkCollisionWithBomb(Bom[i], bomberman)) {
+                    bomberman.setPos(Sprite.SCALED_SIZE, 2 * Sprite.SCALED_SIZE, true);
+                    if (lives.size() != 0) {
+                        lives.remove(lives.size() - 1);
+                    }
+                }
             }
         }
         for (Brick i : listFlameItem) {
@@ -443,15 +564,12 @@ public class GameplayManager {
                 if (s.length() > 0) {
                     deleteFlameItem.add(i);
                 }
-                if (s == "speed") {
-                    bomberman.setSpeed(bomberman.getSpeed() + 1);
-                } else if (s == "bomb") {
-                    numberBom++;
-                } else if (s == "explode") {
-                    SizeBom++;
+                switch (s) {
+                    case "speed" -> bomberman.setSpeed(bomberman.getSpeed() + 1);
+                    case "bomb" -> numberBom++;
+                    case "explode" -> SizeBom++;
                 }
             }
-
         }
         for (Brick i : deleteFlameItem) {
             stillObjects.remove(i);
@@ -469,26 +587,30 @@ public class GameplayManager {
             if(bomberman != null) {
                 if (check.checkCollisionWithEnemy(bomberman, i)) {
                     bomberman.setPos(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE * 2, true);
-                    if (lifes.size() != 0) {
-                        lifes.remove(lifes.size() - 1);
+                    if (lives.size() != 0) {
+                        lives.remove(lives.size() - 1);
                     }
                 }
             }
-
         }
-        if (lifes.isEmpty()) {
-            clearAll();
-            uplevel();
+        if (lives.isEmpty()) {
+            isPaused = true;
+            gameOverScene.getStatus().setText("YOU LOSE :(");
+            gameOverScene.setScoreNumber(score);
+            gameOverScene.showSubscene();
+            timer.stop();
+            Sound.stopBackground();
         }
         if(bomberman != null) {
             if(check.checkCollisionWithPortal(bomberman) && enemies.size() == 0) {
-                clearAll();
                 uplevel();
             }
         }
-
     }
 
+    /**
+     * This function clears the game stage.
+     */
     public void clearAll() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         root.getChildren().removeAll(text, scoreText);
@@ -498,7 +620,7 @@ public class GameplayManager {
         frame_bom = -1;
         numberBom = 1;
         SizeBom = 1;
-        lifes.clear();
+        lives.clear();
         stillObjects.clear();
         listFlameItem.clear();
         deleteFlameItem.clear();
@@ -506,14 +628,16 @@ public class GameplayManager {
         deleteEnemies.clear();
         Bom0.clear();
         Bom1.clear();
-        bomberman = null;
-        p = 0;
         Sound.stopBackground();
-        //bomberman = null;
+        stage.hide();
     }
 
+    /**
+     * This function handles when player has finished a map.
+     */
     public void uplevel() {
         if (level == 1) {
+            clearAll();
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             Sound.playSound(Sound.changeMap);
             level++;
@@ -521,14 +645,20 @@ public class GameplayManager {
             mapMatrix = map.createMap(level);
             root.getChildren().addAll(scoreText, text);
             bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
-            map.addEntity_map2(stillObjects, bricks, enemies, bomberman, lifes);
+            map.addEntity_map2(stillObjects, bricks, enemies, bomberman, lives);
+            stage.show();
         } else {
             Sound.playSound(Sound.winGame);
-            pauseGame();
-            System.out.println("u win");
+            gameOverScene.getStatus().setText("YOU WIN ^^");
+            gameOverScene.setScoreNumber(score);
+            gameOverScene.showSubscene();
+            timer.stop();
         }
     }
 
+    /**
+     * This function adds in-game texts.
+     */
     public void addText() {
         text.setFont(font);
         text.setFill(Color.ORANGERED);

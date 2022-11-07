@@ -3,7 +3,7 @@ package uet.oop.bomberman;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import uet.oop.bomberman.entities.MainMenu.MainSceneManager;
+import uet.oop.bomberman.Menu.Managers.MainSceneManager;
 
 public class BombermanGame extends Application {
     public static void main(String[] args) {

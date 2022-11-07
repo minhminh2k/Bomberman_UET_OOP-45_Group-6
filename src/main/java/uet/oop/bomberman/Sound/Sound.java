@@ -5,7 +5,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import uet.oop.bomberman.entities.Bomber;
@@ -13,6 +12,7 @@ import uet.oop.bomberman.entities.Bomber;
 public class Sound {
     private static int count = 0;
     private boolean playing = true;
+    private static boolean isMuted = false;
     private static List<Media> mediaList = new ArrayList<>();
     public static String explosion = "res/SFX/Bomb_Explosion.wav";
     public static String playerDead = "res/SFX/player_dead.wav";
@@ -21,7 +21,6 @@ public class Sound {
     public static String setBomb = "res/SFX/setBomb.wav";
     public static String footStep1 = "res/SFX/Footstep 1.wav";
     public static String EndGame = "res/Music/songs/Endgame.mp3";
-
     public static String winGame = "res/SFX/win.wav";
     public static String loseGame = "res/SFX/lose.wav";
     public static String changeMap = "res/SFX/changemap.wav";
@@ -39,6 +38,10 @@ public class Sound {
             new Media(new File("res/SFX/Footstep 1.wav").toURI().toString()));
 
     private MediaPlayer mediaPlayer;
+
+    public boolean isMuted() {
+        return isMuted;
+    }
 
     public void init() {
         try {
@@ -59,15 +62,17 @@ public class Sound {
         try {
             MediaPlayer sound = new MediaPlayer(new Media(new File(path).toURI().toString()));
             sound.setVolume(0.5);
-            sound.play();
+            if (!isMuted) {
+                sound.play();
+            }
         } catch (Exception e) {
             System.out.println("Sound Error");
         }
     }
 
     public void playBackground() {
-        if(playing) {
-            soundBackground.setVolume(0.1);
+        if(playing  && !isMuted) {
+            soundBackground.setVolume(0.2);
             soundBackground.setOnEndOfMedia(new Runnable() {
                 public void run() {
                     soundBackground.seek(Duration.ZERO);
@@ -78,10 +83,11 @@ public class Sound {
         }
         else {
             soundBackground.pause();
+            isMuted = true;
         }
     }
     public void soundMoving(Bomber bomberman) {
-        if(bomberman != null) {
+        if(bomberman != null && !isMuted) {
             if (bomberman.isMoving()) {
                 //System.out.println("da chay");
                 walk.setVolume(0.4);
@@ -97,6 +103,16 @@ public class Sound {
             }
         }
         else walk.stop();
+    }
+
+    public void mute() {
+        soundBackground.setVolume(0);
+        isMuted = true;
+    }
+
+    public void unmute() {
+        soundBackground.setVolume(0.2);
+        isMuted = false;
     }
 
 

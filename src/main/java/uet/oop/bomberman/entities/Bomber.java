@@ -82,6 +82,7 @@ public class Bomber extends Entity {
         return lastStatus;
     }
 
+// Tham khao https://www.youtube.com/watch?v=ma-h2RxBBaY
     public void checkCollisionS() {
         int x1, x2, y1, y2, lech2, lech1;
         x1 = (getX() + v_x) / SIZE;
