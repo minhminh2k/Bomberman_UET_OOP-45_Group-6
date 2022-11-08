@@ -598,8 +598,10 @@ public class GameplayManager {
             gameOverScene.getStatus().setText("YOU LOSE :(");
             gameOverScene.setScoreNumber(score);
             gameOverScene.showSubscene();
+            level = 1;
             timer.stop();
             Sound.stopBackground();
+            Sound.playSound(Sound.loseGame);
         }
         if(bomberman != null) {
             if(check.checkCollisionWithPortal(bomberman) && enemies.size() == 0) {
@@ -628,6 +630,7 @@ public class GameplayManager {
         deleteEnemies.clear();
         Bom0.clear();
         Bom1.clear();
+        bomberman.setSpeed(2);
         Sound.stopBackground();
         stage.hide();
     }
@@ -649,10 +652,13 @@ public class GameplayManager {
             stage.show();
         } else {
             Sound.playSound(Sound.winGame);
+            Sound.stopBackground();
+            level = 1;
             gameOverScene.getStatus().setText("YOU WIN ^^");
             gameOverScene.setScoreNumber(score);
             gameOverScene.showSubscene();
             timer.stop();
+
         }
     }
 
