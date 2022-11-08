@@ -7,10 +7,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public abstract class SubsceneManager extends SubScene {
-    protected final static String PANEL = "subscene_panel.png";
+    protected final static String PANEL = "file:res/menu/subscene_panel.png";
     protected Text title;
-    protected Font font = Font.loadFont("file:res/BreathFire.ttf", 35);
-
+    protected Font font = Font.loadFont("file:res/Fonts/BreathFire.ttf", 35);
     public SubsceneManager(Parent parent, double v, double v1) {
         super(parent, v, v1);
     }

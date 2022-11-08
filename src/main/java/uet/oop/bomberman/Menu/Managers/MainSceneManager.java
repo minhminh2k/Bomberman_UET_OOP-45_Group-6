@@ -39,13 +39,11 @@ public class MainSceneManager {
         createHelpSubscene();
     }
 
-
-
     /**
      * This function creates the main menu's background image.
      */
     private void createBackgroundImage() {
-        Image image = new Image("background_image.png");
+        Image image = new Image("file:res/menu/background_image.png");
         BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT,
                 BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
         mainPane.setBackground(new Background(backgroundImage));

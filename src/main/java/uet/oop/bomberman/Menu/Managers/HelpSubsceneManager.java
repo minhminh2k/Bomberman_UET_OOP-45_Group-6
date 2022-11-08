@@ -14,7 +14,7 @@ public class HelpSubsceneManager extends SubsceneManager {
 
     public HelpSubsceneManager() {
         super(new AnchorPane(),851 , 384);
-        BackgroundImage image = new BackgroundImage(new Image("help_panel.png", 851, 384, false, true),
+        BackgroundImage image = new BackgroundImage(new Image("file:res/menu/help_panel.png", 851, 384, false, true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, null);
         AnchorPane pane = (AnchorPane) this.getRoot();
         initChildren();

@@ -14,11 +14,14 @@ import java.io.FileNotFoundException;
 public abstract class RectButton extends Button implements ButtonAction {
     protected final double BUTTON_WIDTH = 190;
     protected final double BUTTON_HEIGHT = 48.3;
-    private final String FONT_PATH = "res/BreathFire.ttf";
+    private final String FONT_PATH = "res/Fonts/BreathFire.ttf";
 
     //BUTTON STYLE
-    private final String BUTTON_PRESSED = "-fx-background-color: transparent; -fx-background-image: url('button_pressed_rect.png');";
-    private final String BUTTON_DEFAULT = "-fx-background-color: transparent ; -fx-background-image: url('button_default_rect.png');";
+    private final String ADDRESS_BUTTON_PRESSED = getClass().getResource("/menu/button_pressed_rect.png").toExternalForm();
+    private final String ADDRESS_BUTTON_DEFAULT = getClass().getResource("/menu/button_default_rect.png").toExternalForm();
+
+    private final String BUTTON_PRESSED = "-fx-background-color: transparent; -fx-background-image: url(" + ADDRESS_BUTTON_PRESSED + ");";
+    private final String BUTTON_DEFAULT = "-fx-background-color: transparent; -fx-background-image: url(" + ADDRESS_BUTTON_DEFAULT + ");";
 
     public RectButton() {
         setButtonLabelFont();

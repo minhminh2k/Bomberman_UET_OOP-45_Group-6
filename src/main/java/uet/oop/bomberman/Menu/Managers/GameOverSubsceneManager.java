@@ -17,7 +17,7 @@ public class GameOverSubsceneManager extends SubsceneManager {
     private Text status;
     private Text score;
     private int scoreNumber;
-    private final Font font2 = Font.loadFont("file:res/EightBitDragon.ttf", 25);
+    private final Font font2 = Font.loadFont("file:res/Fonts/EightBitDragon.ttf", 25);
 
     public void setScoreNumber(int scoreNumber) {
         this.scoreNumber = scoreNumber;

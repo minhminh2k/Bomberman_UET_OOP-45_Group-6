@@ -9,8 +9,11 @@ public class CirclePauseButton extends CircleButton {
 
     private static final double xPos = 930;
     private static final double yPos = 0;
-    private final String BUTTON_PRESSED = "-fx-background-color: transparent; -fx-background-image: url('pause_button_pressed.png');";
-    private final String BUTTON_DEFAULT = "-fx-background-color: transparent ; -fx-background-image: url('pause_button_default.png');";
+
+    private final String ADDRESS_BUTTON_PRESSED = getClass().getResource("/menu/pause_button_pressed.png").toExternalForm();
+    private final String ADDRESS_BUTTON_DEFAULT = getClass().getResource("/menu/pause_button_default.png").toExternalForm();
+    private final String BUTTON_PRESSED = "-fx-background-color: transparent; -fx-background-image: url("+ ADDRESS_BUTTON_PRESSED +");";
+    private final String BUTTON_DEFAULT = "-fx-background-color: transparent ; -fx-background-image: url("+ ADDRESS_BUTTON_DEFAULT +");";
     public CirclePauseButton() {
         super();
         setButtonDefault();

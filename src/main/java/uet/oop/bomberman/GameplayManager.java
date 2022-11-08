@@ -68,7 +68,7 @@ public class GameplayManager {
     Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
 
     //TEXT
-    private final Font font = Font.loadFont("file:res/BreathFire.ttf", 25);
+    private final Font font = Font.loadFont("file:res/Fonts/BreathFire.ttf", 25);
     private final Text scoreText = new Text();
     private final Text text = new Text();
 
