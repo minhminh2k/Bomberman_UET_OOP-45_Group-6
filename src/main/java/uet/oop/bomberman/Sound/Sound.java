@@ -89,7 +89,6 @@ public class Sound {
     public void soundMoving(Bomber bomberman) {
         if(bomberman != null && !isMuted) {
             if (bomberman.isMoving()) {
-                //System.out.println("da chay");
                 walk.setVolume(0.4);
                 walk.setOnEndOfMedia(new Runnable() {
                     @Override

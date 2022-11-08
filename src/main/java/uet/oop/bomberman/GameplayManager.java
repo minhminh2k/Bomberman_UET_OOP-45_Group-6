@@ -550,10 +550,12 @@ public class GameplayManager {
                         }
                     }
                 }
-                if (check.checkCollisionWithBomb(Bom[i], bomberman)) {
-                    bomberman.setPos(Sprite.SCALED_SIZE, 2 * Sprite.SCALED_SIZE, true);
-                    if (lives.size() != 0) {
-                        lives.remove(lives.size() - 1);
+                if (bomberman != null) {
+                    if (check.checkCollisionWithBomb(Bom[i], bomberman)) {
+                        bomberman.setPos(Sprite.SCALED_SIZE, 2 * Sprite.SCALED_SIZE, true);
+                        if (lives.size() != 0) {
+                            lives.remove(lives.size() - 1);
+                        }
                     }
                 }
             }
