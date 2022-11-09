@@ -39,6 +39,10 @@ public class GameOverSubsceneManager extends SubsceneManager {
         return status;
     }
 
+    public Text getScore() {
+        return score;
+    }
+
     public GameOverSubsceneManager() {
         super(new AnchorPane(),601 , 400);
         BackgroundImage image = new BackgroundImage(new Image(PANEL, 601, 400, false, true),
@@ -74,7 +78,6 @@ public class GameOverSubsceneManager extends SubsceneManager {
 
         score = new Text();
         score.setFont(font2);
-        score.setText("YOUR SCORE: " + scoreNumber);
         score.setFill(Color.ORANGERED);
         score.setX(200);
         score.setY(150);

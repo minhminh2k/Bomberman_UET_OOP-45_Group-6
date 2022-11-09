@@ -598,7 +598,8 @@ public class GameplayManager {
         if (lives.isEmpty()) {
             isPaused = true;
             gameOverScene.getStatus().setText("YOU LOSE :(");
-            gameOverScene.setScoreNumber(score);
+            gameOverScene.setScoreNumber(new_score);
+            gameOverScene.getScore().setText("YOUR SCORE: " + new_score);
             gameOverScene.showSubscene();
             level = 1;
             timer.stop();
