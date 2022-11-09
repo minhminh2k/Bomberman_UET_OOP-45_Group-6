@@ -644,6 +644,7 @@ public class GameplayManager {
     public void uplevel() {
         if (level == 1) {
             clearAll();
+            score = 1600;
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             Sound.playSound(Sound.changeMap);
             level++;
