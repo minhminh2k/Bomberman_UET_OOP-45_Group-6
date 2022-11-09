@@ -117,8 +117,10 @@ public class Sound {
 
     public static void stopBackground() {
         soundBackground.stop();
+        walk.stop();
     }
     public static void pauseBackground() {
         soundBackground.pause();
+        walk.pause();
     }
 }

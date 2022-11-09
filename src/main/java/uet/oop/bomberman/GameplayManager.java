@@ -604,6 +604,7 @@ public class GameplayManager {
             level = 1;
             timer.stop();
             Sound.stopBackground();
+            Sound.pauseBackground();
             Sound.playSound(Sound.loseGame);
         }
         if(bomberman != null) {
