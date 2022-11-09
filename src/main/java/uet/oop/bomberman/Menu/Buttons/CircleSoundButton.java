@@ -1,5 +1,10 @@
 package uet.oop.bomberman.Menu.Buttons;
 
+import javafx.event.EventHandler;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+
 public class CircleSoundButton extends CircleButton {
 
     private static final double xPos = 560;
@@ -19,7 +24,6 @@ public class CircleSoundButton extends CircleButton {
     public void setButtonDefault() {
 
     }
-
     @Override
     public void setButtonPressed() {
 
@@ -46,6 +50,41 @@ public class CircleSoundButton extends CircleButton {
 
     @Override
     public void ButtonEventHandler() {
+        setOnMousePressed(new EventHandler<MouseEvent>() {
 
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getButton().equals(MouseButton.PRIMARY)) {
+                    setButtonPressed();
+                }
+            }
+        });
+
+        setOnMouseReleased(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getButton().equals(MouseButton.PRIMARY)) {
+                    setButtonReleased();
+                }
+            }
+        });
+
+        setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                setEffect(new DropShadow());
+            }
+        });
+
+        setOnMouseExited(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                setEffect(null);
+            }
+        });
     }
 }
+

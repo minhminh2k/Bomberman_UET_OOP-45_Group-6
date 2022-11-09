@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.Maps.MapLevel;
 import uet.oop.bomberman.Menu.Buttons.CirclePauseButton;
 import uet.oop.bomberman.Menu.Managers.GameOverSubsceneManager;
+import uet.oop.bomberman.Menu.Managers.Manager;
 import uet.oop.bomberman.Menu.Managers.PauseSubsceneManager;
 import uet.oop.bomberman.Sound.Sound;
 import uet.oop.bomberman.entities.*;
@@ -26,8 +27,8 @@ import uet.oop.bomberman.entities.TitleMap.Brick;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameplayManager {
-    //APPLICATION
+public class GameplayManager implements Manager {
+    //BASE
     private GraphicsContext gc;
     private Canvas canvas;
     private Scene scene;
@@ -35,36 +36,36 @@ public class GameplayManager {
     private Stage stage;
 
     //SUBSCENE
-    private PauseSubsceneManager pauseScene;
-    private GameOverSubsceneManager gameOverScene;
-    private CirclePauseButton circlePauseButton;
     private boolean isPaused = false;
+    private PauseSubsceneManager pauseSubscene;
+    private GameOverSubsceneManager gameOverSubscene;
+    private CirclePauseButton circlePauseButton;
 
     //IN GAME ENTITIES AND LOGIC VARIABLES
-    public int level = 1;
-    private AnimationTimer timer;
-    private final MapLevel map = new MapLevel();
-    private int score = 0;
-    private int new_score = 0;
     public static final int WIDTH = 31;
     public static final int HEIGHT = 14;
+    public static char[][] mapMatrix = new char[HEIGHT][WIDTH];
     public int frame_bom = -1;
     public int numberBom = 1;
     public int SizeBom = 1;
-    public static char[][] mapMatrix = new char[HEIGHT][WIDTH];
     public int Row = HEIGHT;
     public int Col = WIDTH;
+    public int level = 1;
+    private int score = 0;
+    private int new_score = 0;
+    private final MapLevel map = new MapLevel();
     private final List<Entity> lives = new ArrayList<>();
     private final List<Entity> stillObjects = new ArrayList<>();
     private final List<Brick> listFlameItem = new ArrayList<>();
     private final List<Brick> deleteFlameItem = new ArrayList<>();
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Enemy> deleteEnemies = new ArrayList<>();
+    private final Brick[][] bricks = new Brick[HEIGHT][WIDTH];
     private List<Entity> Bom0 = new ArrayList<>();
     private List<Entity> Bom1 = new ArrayList<>();
+    private AnimationTimer timer;
     CheckCollision check = new CheckCollision();
     BomItem[] Bom = new BomItem[3];
-    private final Brick[][] bricks = new Brick[HEIGHT][WIDTH];
     Bomber bomberman = new Bomber(1, 2, Sprite.player_right.getFxImage());
 
     //TEXT
@@ -79,21 +80,29 @@ public class GameplayManager {
     /**
      * This function initializes the application structure.
      */
-    public void init() {
-        gameOverScene = new GameOverSubsceneManager();
+    public void initChildren() {
+        //Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
-        pauseScene = new PauseSubsceneManager();
-        stage = new Stage();
-        root = new Group();
-        circlePauseButton = new CirclePauseButton();
-        root.getChildren().add(canvas);
-        root.getChildren().add(gameOverScene);
         canvas.setMouseTransparent(true);
+
+        //Subscenes
+        gameOverSubscene = new GameOverSubsceneManager();
+        pauseSubscene = new PauseSubsceneManager();
+
+        //Base
+        root = new Group();
+        root.getChildren().add(canvas);
         scene = new Scene(root);
+        stage = new Stage();
         stage.setTitle("Bomberman");
         stage.setScene(scene);
         stage.show();
+
+        //Button
+        circlePauseButton = new CirclePauseButton();
+
+        //Timer
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
@@ -130,9 +139,16 @@ public class GameplayManager {
                 update();
             }
         };
+        timer.start();
+
+        //Sound
         isMuted = false;
         sound.unmute();
-        timer.start();
+    }
+
+    @Override
+    public void addChildren() {
+        root.getChildren().add(gameOverSubscene);
         addText();
     }
 
@@ -146,7 +162,9 @@ public class GameplayManager {
             clearAll();
         }
 
-        init();
+        initChildren();
+        addChildren();
+
         mapMatrix = map.createMap(level);
         bomberman.setPos(32,32 * 2);
         for (int i = 0; i < 3; i++) {
@@ -165,10 +183,11 @@ public class GameplayManager {
                 };
             }
         }
+        map.addEntity_map1(stillObjects, bricks, enemies, bomberman, lives);
+
         keyEventHandling(scene);
         pauseSubSceneEventHandling(menuStage);
         gameOverSubSceneEventHandling(menuStage);
-        map.addEntity_map1(stillObjects, bricks, enemies, bomberman, lives);
     }
 
     /**
@@ -197,9 +216,9 @@ public class GameplayManager {
                 stage.close();
             }
         };
-        gameOverScene.getReturnMainMenuButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, returnMain);
-        gameOverScene.getNewGameButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, newGame);
-        gameOverScene.getExitButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, exit);
+        gameOverSubscene.getReturnMainMenuButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, returnMain);
+        gameOverSubscene.getNewGameButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, newGame);
+        gameOverSubscene.getExitButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, exit);
     }
 
     /**
@@ -219,10 +238,10 @@ public class GameplayManager {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
                 if (sound.isMuted()) {
-                    pauseScene.getSoundButton().setUNMUTED();
+                    pauseSubscene.getSoundButton().setUNMUTED();
                     sound.unmute();
                 } else {
-                    pauseScene.getSoundButton().setMUTED();
+                    pauseSubscene.getSoundButton().setMUTED();
                     sound.mute();
                 }
             }
@@ -250,10 +269,10 @@ public class GameplayManager {
         };
 
         circlePauseButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, pause);
-        pauseScene.getReturnMainMenuButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, returnMain);
-        pauseScene.getResumeButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, resume);
-        pauseScene.getSoundButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, muteSound);
-        pauseScene.getExitButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, exit);
+        pauseSubscene.getReturnMainMenuButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, returnMain);
+        pauseSubscene.getResumeButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, resume);
+        pauseSubscene.getSoundButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, muteSound);
+        pauseSubscene.getExitButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, exit);
     }
 
     /**
@@ -384,15 +403,15 @@ public class GameplayManager {
         menuStage.show();
         timer.stop();
         Sound.stopBackground();
-        pauseScene.hideSubscene();
+        pauseSubscene.hideSubscene();
     }
 
     /**
      * This function pauses the game.
      */
     public void pauseGame() {
-        root.getChildren().add(pauseScene);
-        pauseScene.showSubscene();
+        root.getChildren().add(pauseSubscene);
+        pauseSubscene.showSubscene();
         isPaused = true;
         timer.stop();
         Sound.pauseBackground();
@@ -402,8 +421,8 @@ public class GameplayManager {
      * This function continues the game.
      */
     public void resumeGame() {
-        root.getChildren().remove(pauseScene);
-        pauseScene.hideSubscene();
+        root.getChildren().remove(pauseSubscene);
+        pauseSubscene.hideSubscene();
         isPaused = false;
         timer.start();
         if (!isMuted){
@@ -597,10 +616,10 @@ public class GameplayManager {
         }
         if (lives.isEmpty()) {
             isPaused = true;
-            gameOverScene.getStatus().setText("YOU LOSE :(");
-            gameOverScene.setScoreNumber(new_score);
-            gameOverScene.getScore().setText("YOUR SCORE: " + new_score);
-            gameOverScene.showSubscene();
+            gameOverSubscene.getStatus().setText("YOU LOSE :(");
+            gameOverSubscene.setScoreNumber(new_score);
+            gameOverSubscene.getScore().setText("YOUR SCORE: " + new_score);
+            gameOverSubscene.showSubscene();
             level = 1;
             timer.stop();
             Sound.stopBackground();
@@ -659,9 +678,10 @@ public class GameplayManager {
             Sound.playSound(Sound.winGame);
             Sound.stopBackground();
             level = 1;
-            gameOverScene.getStatus().setText("YOU WIN ^^");
-            gameOverScene.setScoreNumber(score);
-            gameOverScene.showSubscene();
+            gameOverSubscene.getStatus().setText("YOU WIN ^^");
+            gameOverSubscene.setScoreNumber(score);
+            gameOverSubscene.getScore().setText("YOUR SCORE: " + 4800);
+            gameOverSubscene.showSubscene();
             timer.stop();
 
         }
@@ -683,5 +703,10 @@ public class GameplayManager {
         text.setY(25);
         text.setText("Score: ");
         root.getChildren().addAll(text, scoreText);
+    }
+
+    @Override
+    public void createBackgroundImage() {
+
     }
 }

@@ -11,12 +11,13 @@ import uet.oop.bomberman.Menu.Buttons.RectHelpButton;
 import uet.oop.bomberman.Menu.Buttons.RectNewGameButton;
 import uet.oop.bomberman.Menu.Buttons.RectResumeButton;
 
-public class MainSceneManager {
+public class MainSceneManager implements Manager{
     private static final int HEIGHT = 448;
     private static final int WIDTH = 992;
+    protected final String PANEL = "file:res/menu/background_image.png";
 
     //MAIN STAGE'S STRUCTURE AND PARENTS
-    private final AnchorPane mainPane;
+    private final AnchorPane pane;
     private final Stage mainStage;
     private final GameplayManager gameplayManager;
 
@@ -28,13 +29,13 @@ public class MainSceneManager {
     private HelpSubsceneManager helpSubScene;
 
     public MainSceneManager() {
-        mainPane = new AnchorPane();
-        Scene mainScene = new Scene(mainPane, WIDTH, HEIGHT);
+        pane = new AnchorPane();
+        Scene mainScene = new Scene(pane, WIDTH, HEIGHT);
         mainStage = new Stage();
         mainStage.setScene(mainScene);
         gameplayManager = new GameplayManager();
         initChildren();
-        addChildren(mainPane);
+        addChildren();
         createBackgroundImage();
         createHelpSubscene();
     }
@@ -42,27 +43,27 @@ public class MainSceneManager {
     /**
      * This function creates the main menu's background image.
      */
-    private void createBackgroundImage() {
-        Image image = new Image("file:res/menu/background_image.png");
-        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT,
-                BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
-        mainPane.setBackground(new Background(backgroundImage));
+    public void createBackgroundImage() {
+        BackgroundImage image = new BackgroundImage(new Image(PANEL, WIDTH, HEIGHT, false, true),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
+
+        pane.setBackground(new Background(image));
     }
 
     /**
      * This function adds all the children to the mainPain.
      */
-    private void addChildren(AnchorPane pane) {
-        mainPane.getChildren().add(rectNewGameButton);
-        mainPane.getChildren().add(rectResumeButton);
-        mainPane.getChildren().add(rectHelpButton);
-        mainPane.getChildren().add(rectExitButton);
+    public void addChildren() {
+        this.pane.getChildren().add(rectNewGameButton);
+        this.pane.getChildren().add(rectResumeButton);
+        this.pane.getChildren().add(rectHelpButton);
+        this.pane.getChildren().add(rectExitButton);
     }
 
     /**
      * This function calls all the children's initializing function.
      */
-    private void initChildren() {
+    public void initChildren() {
         createNewGameButton();
         createHelpButton();
         createResumeButton();
@@ -106,7 +107,7 @@ public class MainSceneManager {
         EventHandler<javafx.scene.input.MouseEvent> eventHandler = new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                mainPane.getChildren().add(helpSubScene);
+                pane.getChildren().add(helpSubScene);
             }
         };
         rectHelpButton.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -134,7 +135,7 @@ public class MainSceneManager {
         EventHandler<javafx.scene.input.MouseEvent> eventHandler = new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                mainPane.getChildren().remove(helpSubScene);
+                pane.getChildren().remove(helpSubScene);
             }
         };
         helpSubScene.getReturnMainMenuButton().addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
