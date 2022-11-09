@@ -25,12 +25,12 @@ public class Sprite {
 	| Board sprites
 	|--------------------------------------------------------------------------
 	 */
-	public static Sprite grass = new Sprite(DEFAULT_SIZE, 6, 0, SpriteSheet.tiles, 16, 16);
+	public static Sprite grass = new Sprite(DEFAULT_SIZE, 8, 3, SpriteSheet.tiles, 16, 16);
 	public static Sprite grass_map2 = new Sprite(DEFAULT_SIZE, 8, 1, SpriteSheet.tiles, 16, 16);
-	public static Sprite brick = new Sprite(DEFAULT_SIZE, 7, 0, SpriteSheet.tiles, 16, 16);
-
+	public static Sprite brick = new Sprite(DEFAULT_SIZE, 8, 2, SpriteSheet.tiles, 16, 16);
+	// 7 0
 	public static Sprite brick_map2 = new Sprite(DEFAULT_SIZE, 8, 0, SpriteSheet.tiles, 16, 16);
-	public static Sprite wall = new Sprite(DEFAULT_SIZE, 5, 0, SpriteSheet.tiles, 16, 16);
+	public static Sprite wall = new Sprite(DEFAULT_SIZE, 5, 0, SpriteSheet.tiles, 16, 16);//5 0
 	public static Sprite wall_map2 = new Sprite(DEFAULT_SIZE, 5, 1, SpriteSheet.tiles, 16, 16);
 
 	public static Sprite portal = new Sprite(DEFAULT_SIZE, 4, 0, SpriteSheet.tiles, 14, 14);
@@ -61,7 +61,7 @@ public class Sprite {
 	public static Sprite player_dead2 = new Sprite(DEFAULT_SIZE, 5, 2, SpriteSheet.tiles, 13, 15);
 	public static Sprite player_dead3 = new Sprite(DEFAULT_SIZE, 6, 2, SpriteSheet.tiles, 16, 16);
 	
-	/*
+	/*  
 	|--------------------------------------------------------------------------
 	| Character
 	|--------------------------------------------------------------------------
