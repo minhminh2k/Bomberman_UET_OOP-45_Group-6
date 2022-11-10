@@ -17,7 +17,12 @@ public class BomItem extends Entity {
     public static int ColX;
     public static final int one_frame_bom = 20;
     public int frame_bom = -1;
-    public int SizeBom = 2;
+
+    public int getSizeBom() {
+        return SizeBom;
+    }
+
+    public int SizeBom = 1;
     public boolean[] checkbomb = new boolean[9];
 
     public int distanceRight = 0;
@@ -76,7 +81,6 @@ public class BomItem extends Entity {
                     bomb[1].setEntity(col + 1, row, Sprite.explosion_horizontal_right_last.getFxImage());
                     checkbomb[1] = true;
                     stillObjects.add(bomb[1]);
-                    explodeRight = 1;
                 }
             }
             if (row + 1 <= HEIGHT) {
@@ -84,7 +88,6 @@ public class BomItem extends Entity {
                     bomb[7].setEntity(col, row + 1, Sprite.explosion_vertical_down_last.getFxImage());
                     checkbomb[7] = true;
                     stillObjects.add(bomb[7]);
-                    explodeDown = 1;
                 }
             }
             if (col - 1 >= 0) {
@@ -92,7 +95,6 @@ public class BomItem extends Entity {
                     bomb[3].setEntity(col - 1, row, Sprite.explosion_horizontal_left_last.getFxImage());
                     checkbomb[3] = true;
                     stillObjects.add(bomb[3]);
-                    explodeLeft = 1;
                 }
             }
             if (row - 1 >= 0) {
@@ -100,7 +102,6 @@ public class BomItem extends Entity {
                     bomb[5].setEntity(col, row - 1, Sprite.explosion_vertical_top_last.getFxImage());
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
-                    explodeUp = 1;
                 }
             }
         } else if (SizeBom == 2) {
@@ -112,12 +113,10 @@ public class BomItem extends Entity {
                     checkbomb[1] = true;
                     stillObjects.add(bomb[2]);
                     stillObjects.add(bomb[1]);
-                    explodeRight = 2;
                 } else if (canPass(row, col + 1) && !canPass(row, col + 2)) {
                     bomb[1].setEntity(col + 1, row, Sprite.explosion_horizontal_right_last.getFxImage());
                     checkbomb[1] = true;
                     stillObjects.add(bomb[1]);
-                    explodeRight = 1;
                 }
             } else if (col + 2 >= WIDTH) {
             }
@@ -129,12 +128,10 @@ public class BomItem extends Entity {
                     checkbomb[7] = true;
                     stillObjects.add(bomb[8]);
                     stillObjects.add(bomb[7]);
-                    explodeDown = 2;
                 } else if (canPass(row + 1, col) && !canPass(row + 2, col)) {
                     bomb[7].setEntity(col, row + 1, Sprite.explosion_vertical_down_last.getFxImage());
                     checkbomb[7] = true;
                     stillObjects.add(bomb[7]);
-                    explodeDown = 1;
                 }
             } else {
 
@@ -147,19 +144,16 @@ public class BomItem extends Entity {
                     checkbomb[4] = true;
                     stillObjects.add(bomb[3]);
                     stillObjects.add(bomb[4]);
-                    explodeLeft = 2;
                 } else if (canPass(row, col - 1) && !canPass(row, col - 2)) {
                     bomb[3].setEntity(col - 1, row, Sprite.explosion_horizontal_left_last.getFxImage());
                     checkbomb[3] = true;
                     stillObjects.add(bomb[3]);
-                    explodeLeft = 1;
                 }
             } else if (col == 2) {
                 if (canPass(row, col - 1)) {
                     bomb[3].setEntity(col - 1, row, Sprite.explosion_horizontal_left_last.getFxImage());
                     checkbomb[3] = true;
                     stillObjects.add(bomb[3]);
-                    explodeLeft = 1;
                 }
             }
             if (row - 2 > 0) {
@@ -170,19 +164,16 @@ public class BomItem extends Entity {
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
                     stillObjects.add(bomb[6]);
-                    explodeDown = 2;
                 } else if (canPass(row - 1, col) && !canPass(row - 2, col)) {
                     bomb[5].setEntity(col, row - 1, Sprite.explosion_vertical_top_last.getFxImage());
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
-                    explodeDown = 1;
                 }
             } else if (row == 2) {
                 if (canPass(row - 1, col)) {
                     bomb[5].setEntity(col, row - 1, Sprite.explosion_vertical_top_last.getFxImage());
                     checkbomb[5] = true;
                     stillObjects.add(bomb[5]);
-                    explodeDown = 1;
                 }
             }
         }
@@ -356,6 +347,7 @@ public class BomItem extends Entity {
                     }
                 }
                 distanceUp = distanceDown = distanceRight = distanceLeft = 0;
+                explodeRight = explodeUp = explodeDown = explodeLeft = 0;
             }
             frame_bom--;
         } else {
@@ -390,6 +382,7 @@ public class BomItem extends Entity {
         distanceLeft = checkLeft();
         distanceDown = checkDown();
         distanceUp = checkUp();
+        updateExplode();
         Sound.playSound(Sound.setBomb);
     }
 
@@ -496,6 +489,73 @@ public class BomItem extends Entity {
     }
     public int getExplodeDown() {
         return explodeDown;
+    }
+
+    public void updateExplode() {
+        int row = bomb[0].getY() / Sprite.SCALED_SIZE;
+        int col = bomb[0].getX() / Sprite.SCALED_SIZE;
+        if (SizeBom == 1) {
+            if (col + 1 <= WIDTH) {
+                if (canPass(row, col + 1)) {
+                    explodeRight = 1;
+                }
+            }
+            if (row + 1 <= HEIGHT) {
+                if (canPass(row + 1, col)) {
+                    explodeDown = 1;
+                }
+            }
+            if (col - 1 >= 0) {
+                if (canPass(row, col - 1)) {
+                    explodeLeft = 1;
+                }
+            }
+            if (row - 1 >= 0) {
+                if (canPass(row - 1, col)) {
+                    explodeUp = 1;
+                }
+            }
+        } else if (SizeBom == 2) {
+            if (col + 2 < WIDTH) {
+                if (canPass(row, col + 2) && canPass(row, col + 1)) {
+                    explodeRight = 2;
+                } else if (canPass(row, col + 1) && !canPass(row, col + 2)) {
+                    explodeRight = 1;
+                }
+            } else if (col + 2 >= WIDTH) {
+            }
+            if (row + 2 < HEIGHT) {
+                if (canPass(row + 2, col) && canPass(row + 1, col)) {
+                    explodeDown = 2;
+                } else if (canPass(row + 1, col) && !canPass(row + 2, col)) {
+                    explodeDown = 1;
+                }
+            } else {
+
+            }
+            if (col - 2 > 0) {
+                if (canPass(row, col - 2) && canPass(row, col - 1)) {
+                    explodeLeft = 2;
+                } else if (canPass(row, col - 1) && !canPass(row, col - 2)) {
+                    explodeLeft = 1;
+                }
+            } else if (col == 2) {
+                if (canPass(row, col - 1)) {
+                    explodeLeft = 1;
+                }
+            }
+            if (row - 2 > 0) {
+                if (canPass(row - 2, col) && canPass(row - 1, col)) {
+                    explodeUp = 2;
+                } else if (canPass(row - 1, col) && !canPass(row - 2, col)) {
+                    explodeDown = 1;
+                }
+            } else if (row == 2) {
+                if (canPass(row - 1, col)) {
+                    explodeUp = 1;
+                }
+            }
+        }
     }
 
 }

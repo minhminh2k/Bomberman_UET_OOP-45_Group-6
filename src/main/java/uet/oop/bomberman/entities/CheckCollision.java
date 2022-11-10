@@ -91,58 +91,60 @@ public class CheckCollision {
         return false;
     }
 
-    public boolean checkCollisionWithBomb(BomItem bomb, Bomber bomberman) {	
-        if (bomb.getFrame_bom() <= bomb.getOne_frame_bom() * 3 && !bomberman.getJustDead()) {	
-            int leftA, leftB;	
-            int rightA, rightB;	
-            int topA, topB;	
-            int bottomA, bottomB;	
-            leftA = bomberman.getX();	
-            rightA = leftA + 24;	
-            leftA /= 32;	
-            rightA /= 32;	
-            topA = bomberman.getY();	
+    public boolean checkCollisionWithBomb(BomItem bomb, Bomber bomberman) {
+        if ( bomb.getFrame_bom() > 0 && bomb.getFrame_bom() < bomb.getOne_frame_bom() * 3 && !bomberman.getJustDead()) {
+            int leftA, leftB;
+            int rightA, rightB;
+            int topA, topB;
+            int bottomA, bottomB;
+            leftA = bomberman.getX();
+            rightA = leftA + 24;
+            leftA /= 32;
+            rightA /= 32;
+            topA = bomberman.getY();
             bottomA = topA + 32 - 2;
-            topA /= 32;	
-            bottomA /= 32;	
-            leftB = bomb.getX() ;	
-            topB = bomb.getY() ;	
-            leftB /= 32;	
+            topA /= 32;
+            bottomA /= 32;
+            leftB = bomb.getX() ;
+            topB = bomb.getY() ;
+            leftB /= 32;
             topB /= 32;
-            if (leftA == leftB && topA >= topB - bomb.getExplodeUp() && topA <= topB + bomb.getExplodeDown()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-            if (leftA == leftB && bottomA >= topB - bomb.getExplodeUp() && bottomA <= topB + bomb.getExplodeDown()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-            if (rightA == leftB && topA >= topB - bomb.getExplodeUp() && topA <= topB + bomb.getExplodeDown()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-            if (rightA == leftB && bottomA >= topB - bomb.getExplodeUp() && bottomA <= topB + bomb.getExplodeDown()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-            if (topA == topB && leftA >= leftB - bomb.getExplodeLeft() && leftA <= leftB + bomb.getExplodeRight()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-            if (bottomA == topB && leftA >= leftB - bomb.getExplodeLeft() && leftA <= leftB + bomb.getExplodeRight()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-            if (topA == topB && rightA >= leftB - bomb.getExplodeLeft() && rightA <= leftB + bomb.getExplodeRight()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-            if (bottomA == topB && rightA >= leftB - bomb.getExplodeLeft() && rightA <= leftB + bomb.getExplodeRight()) {	
-                Sound.playSound(Sound.playerDead);	
-                return true;	
-            }	
-        }	
-        return false;	
+            if (leftA == leftB && topA >= topB - bomb.getExplodeUp() && topA <= topB + bomb.getExplodeDown()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+
+            if (rightA == leftB && topA >= topB - bomb.getExplodeUp() && topA <= topB + bomb.getExplodeDown()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+            if (leftA == leftB && bottomA >= topB - bomb.getExplodeUp() && bottomA <= topB + bomb.getExplodeDown()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+            //System.out.println(rightA + " " + leftB + " " + bottomA + " " + topB + " " + bomb.getExplodeUp() + " " + bomb.getExplodeDown());
+            if (rightA == leftB && bottomA >= topB - bomb.getExplodeUp() && bottomA <= topB + bomb.getExplodeDown()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+            if (topA == topB && leftA >= leftB - bomb.getExplodeLeft() && leftA <= leftB + bomb.getExplodeRight()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+            if (bottomA == topB && leftA >= leftB - bomb.getExplodeLeft() && leftA <= leftB + bomb.getExplodeRight()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+            if (topA == topB && rightA >= leftB - bomb.getExplodeLeft() && rightA <= leftB + bomb.getExplodeRight()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+            if (bottomA == topB && rightA >= leftB - bomb.getExplodeLeft() && rightA <= leftB + bomb.getExplodeRight()) {
+                Sound.playSound(Sound.playerDead);
+                return true;
+            }
+        }
+        return false;
     }
 
     public String checkCollisionWithFlameItem(Bomber bomberman, Brick flameItem) {
@@ -181,20 +183,13 @@ public class CheckCollision {
         int rightA, rightB;
         int topA, topB;
         int bottomA, bottomB;
-        leftA = bomberman.getX();
-        rightA = leftA + 24;
-        topA = bomberman.getY();
-        bottomA = topA + 31;
-        int center_x = leftA + 12;
-        int center_y = topA + 16;
+        int center_x = bomberman.getX() + 16;
+        int center_y = bomberman.getY() + 24;
         leftB = MapLevel.End_x;
         rightB = leftB + 32;
         topB = MapLevel.End_y;
         bottomB = topB + 32;
-        if ((bottomB >= topA && rightB >= leftA && rightB - 32 <= leftA && bottomB - 32 <= topA)
-                || (bottomB >= topA && rightA >= leftB && rightA - 24 <= leftB && bottomB - 32 <= topA)
-                || (bottomA >= topB && rightB >= leftA && rightB - 32 <= leftA && bottomA - 32 <= topB)
-                || (bottomA >= topB && rightA >= leftB && rightA - 24 <= leftB && bottomA - 32 <= topB)) {
+        if( center_y >= topB && center_y <= bottomB && center_x >= leftB && center_x <= rightB) {
             return true;
         }
         return false;
